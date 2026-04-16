@@ -1,0 +1,45 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs / editors
+.idea/
+.vscode/
+*.iml
+
+# Logs
+*.log
+logs/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.vite/
+
+# Java / Maven / Spring Boot
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+
+# IntelliJ / Java build leftovers
+**/out/
+**/build/
+
+# Spring Boot
+backend/.springBeans
+backend/.sts4-cache
+
+# Coverage / reports
+coverage/
+*.coverage
+*.lcov
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
