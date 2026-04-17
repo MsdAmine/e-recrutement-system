@@ -36,4 +36,11 @@ public class GlobalExceptionHandler {
         problem.setTitle("Validation error");
         return problem;
     }
+
+    @ExceptionHandler(ForbiddenOperationException.class)
+    public ProblemDetail handleForbiddenOperation(ForbiddenOperationException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
+        problem.setTitle("Forbidden operation");
+        return problem;
+    }
 }
