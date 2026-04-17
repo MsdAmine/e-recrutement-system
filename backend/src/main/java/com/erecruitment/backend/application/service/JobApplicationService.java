@@ -108,6 +108,23 @@ public class JobApplicationService {
         return mapToResponse(updated);
     }
 
+    public List<JobApplicationResponse> getApplicationsForSpecificJobOffer(Long jobOfferId, String recruiterEmail) {
+        User recruiter = userRepository.findByEmail(recruiterEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("Recruiter not found"));
+
+        JobOffer jobOffer = jobOfferRepository.findById(jobOfferId)
+                .orElseThrow(() -> new ResourceNotFoundException("Job offer not found"));
+
+        if (!jobOffer.getRecruiter().getId().equals(recruiter.getId())) {
+            throw new ForbiddenOperationException("You can only access applications for your own job offers.");
+        }
+
+        return jobApplicationRepository.findByJobOfferIdOrderByAppliedAtDesc(jobOfferId)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
     private JobApplicationResponse mapToResponse(JobApplication application) {
         return JobApplicationResponse.builder()
                 .id(application.getId())
