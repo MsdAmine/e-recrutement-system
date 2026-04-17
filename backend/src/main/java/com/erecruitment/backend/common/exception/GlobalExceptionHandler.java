@@ -43,4 +43,11 @@ public class GlobalExceptionHandler {
         problem.setTitle("Forbidden operation");
         return problem;
     }
+
+    @ExceptionHandler(DuplicateApplicationException.class)
+    public ProblemDetail handleDuplicateApplication(DuplicateApplicationException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+        problem.setTitle("Duplicate application");
+        return problem;
+    }
 }
