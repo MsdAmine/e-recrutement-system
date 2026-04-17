@@ -12,11 +12,15 @@ import com.erecruitment.backend.common.exception.InvalidCredentialsException;
 import com.erecruitment.backend.common.exception.ResourceNotFoundException;
 import com.erecruitment.backend.recruiter.entity.RecruiterProfile;
 import com.erecruitment.backend.recruiter.repository.RecruiterProfileRepository;
+import com.erecruitment.backend.security.jwt.JwtService;
 import com.erecruitment.backend.user.entity.Role;
 import com.erecruitment.backend.user.entity.User;
 import com.erecruitment.backend.user.repository.RoleRepository;
 import com.erecruitment.backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +33,8 @@ public class AuthService {
     private final CandidateProfileRepository candidateProfileRepository;
     private final RecruiterProfileRepository recruiterProfileRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
     public AuthResponse registerCandidate(CandidateRegisterRequest request) {
         if (userRepository.existsByEmail(request.email())) {
@@ -55,12 +61,21 @@ public class AuthService {
 
         candidateProfileRepository.save(candidateProfile);
 
+        UserDetails userDetails = org.springframework.security.core.userdetails.User
+                .withUsername(savedUser.getEmail())
+                .password(savedUser.getPassword())
+                .authorities(savedUser.getRole().getName().name())
+                .build();
+
+        String jwtToken = jwtService.generateToken(userDetails, savedUser.getRole().getName().name());
+
         return AuthResponse.builder()
                 .userId(savedUser.getId())
                 .firstName(savedUser.getFirstName())
                 .lastName(savedUser.getLastName())
                 .email(savedUser.getEmail())
                 .role(savedUser.getRole().getName().name())
+                .token(jwtToken)
                 .message("Candidate registered successfully.")
                 .build();
     }
@@ -91,29 +106,44 @@ public class AuthService {
 
         recruiterProfileRepository.save(recruiterProfile);
 
+        UserDetails userDetails = org.springframework.security.core.userdetails.User
+                .withUsername(savedUser.getEmail())
+                .password(savedUser.getPassword())
+                .authorities(savedUser.getRole().getName().name())
+                .build();
+
+        String jwtToken = jwtService.generateToken(userDetails, savedUser.getRole().getName().name());
+
         return AuthResponse.builder()
                 .userId(savedUser.getId())
                 .firstName(savedUser.getFirstName())
                 .lastName(savedUser.getLastName())
                 .email(savedUser.getEmail())
                 .role(savedUser.getRole().getName().name())
+                .token(jwtToken)
                 .message("Recruiter registered successfully.")
                 .build();
     }
 
     public AuthResponse login(LoginRequest request) {
-        User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password."));
-
-        boolean passwordMatches = passwordEncoder.matches(request.password(), user.getPassword());
-
-        if (!passwordMatches) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.email(), request.password())
+            );
+        } catch (Exception ex) {
             throw new InvalidCredentialsException("Invalid email or password.");
         }
 
-        if (!user.isEnabled()) {
-            throw new InvalidCredentialsException("User account is disabled.");
-        }
+        User user = userRepository.findByEmail(request.email())
+                .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password."));
+
+        UserDetails userDetails = org.springframework.security.core.userdetails.User
+                .withUsername(user.getEmail())
+                .password(user.getPassword())
+                .authorities(user.getRole().getName().name())
+                .build();
+
+        String jwtToken = jwtService.generateToken(userDetails, user.getRole().getName().name());
 
         return AuthResponse.builder()
                 .userId(user.getId())
@@ -121,6 +151,7 @@ public class AuthService {
                 .lastName(user.getLastName())
                 .email(user.getEmail())
                 .role(user.getRole().getName().name())
+                .token(jwtToken)
                 .message("Login successful.")
                 .build();
     }
