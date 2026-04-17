@@ -18,3 +18,7 @@ spring:
   sql:
     init:
       mode: never
+app:
+  jwt:
+    secret: 8f6c9b4d2e7a1f5c8b3d6e9a2c4f7b1d8e5a9c2f6b3d7e1a4c8f5b2d9e6a1c7
+    expiration: 86400000
