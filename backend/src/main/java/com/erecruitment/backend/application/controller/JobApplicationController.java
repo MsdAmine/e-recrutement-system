@@ -61,4 +61,13 @@ public class JobApplicationController {
     ) {
         return jobApplicationService.updateApplicationStatus(applicationId, authentication.getName(), request);
     }
+
+    @GetMapping("/recruiter/job-offers/{jobOfferId}")
+    @PreAuthorize("hasRole('RECRUITER')")
+    public List<JobApplicationResponse> getApplicationsForSpecificJobOffer(
+            @PathVariable Long jobOfferId,
+            Authentication authentication
+    ) {
+        return jobApplicationService.getApplicationsForSpecificJobOffer(jobOfferId, authentication.getName());
+    }
 }
