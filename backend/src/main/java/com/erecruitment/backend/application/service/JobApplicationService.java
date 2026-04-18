@@ -16,6 +16,8 @@ import com.erecruitment.backend.user.entity.User;
 import com.erecruitment.backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.erecruitment.backend.common.enums.NotificationType;
+import com.erecruitment.backend.notification.service.NotificationService;
 
 import java.util.List;
 
@@ -26,6 +28,7 @@ public class JobApplicationService {
     private final JobApplicationRepository jobApplicationRepository;
     private final JobOfferRepository jobOfferRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     public JobApplicationResponse applyToJob(Long jobOfferId, String candidateEmail, ApplyJobRequest request) {
         User candidate = userRepository.findByEmail(candidateEmail)
@@ -54,6 +57,12 @@ public class JobApplicationService {
                 .build();
 
         JobApplication saved = jobApplicationRepository.save(application);
+        notificationService.createNotification(
+                jobOffer.getRecruiter(),
+                NotificationType.NEW_APPLICATION,
+                "New application received for job offer '" + jobOffer.getTitle() +
+                        "' from candidate " + candidate.getEmail() + "."
+        );
         return mapToResponse(saved);
     }
 
@@ -105,6 +114,13 @@ public class JobApplicationService {
         application.setStatus(request.status());
 
         JobApplication updated = jobApplicationRepository.save(application);
+        notificationService.createNotification(
+                application.getCandidate(),
+                NotificationType.APPLICATION_STATUS_UPDATED,
+                "Your application for '" + application.getJobOffer().getTitle() +
+                        "' has been updated to status: " + request.status() + "."
+        );
+
         return mapToResponse(updated);
     }
 
