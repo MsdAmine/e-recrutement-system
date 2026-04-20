@@ -76,14 +76,24 @@ const Navbar = () => {
               </div>
             </>
           ) : (
-            <div style={{ display: 'flex', gap: '1rem' }}>
-              <Link to="/login" style={{ color: 'var(--text-primary)' }}>Login</Link>
-              <Link to="/register" className="glass" style={{ 
-                padding: '0.5rem 1.25rem', 
-                borderRadius: 'var(--radius-md)',
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <Link to="/login" style={{ 
+                color: 'var(--text-primary)', 
+                fontSize: '0.9rem', 
+                fontWeight: '500',
+                padding: '0.5rem 0.75rem'
+              }}>Login</Link>
+              <Link to="/register" style={{ 
+                padding: '0.6rem 1.5rem', 
+                borderRadius: 'var(--radius-lg)',
                 background: 'var(--accent-gradient)',
                 color: 'white',
-                fontWeight: '500'
+                fontWeight: '600',
+                fontSize: '0.9rem',
+                boxShadow: 'var(--shadow-md)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
               }}>Register</Link>
             </div>
           )}

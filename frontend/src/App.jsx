@@ -10,8 +10,15 @@ import DashboardPage from './pages/DashboardPage';
 const NotificationsPage = () => <div className="container"><h2>Notifications (Coming Soon)</h2></div>;
 
 // Placeholder Pages
-const Home = () => (
-  <div className="container animate-fade-in">
+const Home = () => {
+  const { user } = useAuth();
+  
+  if (user) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return (
+    <div className="container animate-fade-in">
     <header style={{ textAlign: 'center', padding: '4rem 0' }}>
       <h1 style={{ fontSize: '3.5rem', marginBottom: '1.5rem' }}>
         Find Your <span className="gradient-text">Dream Job</span> Today
@@ -51,8 +58,9 @@ const Home = () => (
         <p style={{ color: 'var(--text-secondary)' }}>Stay updated on your application status or new applicants with our instant notification system.</p>
       </div>
     </section>
-  </div>
-);
+    </div>
+  );
+};
 
 
 
