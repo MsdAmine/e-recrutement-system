@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../services/authService';
 import { UserPlus, Mail, Lock, User, Briefcase, Building, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { useEffect } from 'react';
 
 const RegisterPage = () => {
   const [role, setRole] = useState('candidate'); // 'candidate' or 'recruiter'
@@ -16,8 +17,14 @@ const RegisterPage = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   
-  const { login } = useAuth();
+  const { user, login } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -142,36 +149,46 @@ const RegisterPage = () => {
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label style={{ fontSize: '0.85rem', fontWeight: '500', color: 'var(--text-secondary)' }}>First Name</label>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+              <label style={{ fontSize: '0.85rem', fontWeight: '500', color: 'var(--text-secondary)', paddingLeft: '0.2rem' }}>First Name</label>
               <input
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
                 placeholder="John"
                 required
-                className="glass"
-                style={{ width: '100%', padding: '0.875rem 1rem', borderRadius: 'var(--radius-lg)', color: 'white' }}
+                className="glass-input"
+                style={{ width: '100%', padding: '1rem', borderRadius: 'var(--radius-xl)', color: 'white', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid var(--border)', outline: 'none' }}
               />
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label style={{ fontSize: '0.85rem', fontWeight: '500', color: 'var(--text-secondary)' }}>Last Name</label>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+              <label style={{ fontSize: '0.85rem', fontWeight: '500', color: 'var(--text-secondary)', paddingLeft: '0.2rem' }}>Last Name</label>
               <input
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
                 placeholder="Doe"
                 required
-                className="glass"
-                style={{ width: '100%', padding: '0.875rem 1rem', borderRadius: 'var(--radius-lg)', color: 'white' }}
+                className="glass-input"
+                style={{ width: '100%', padding: '1rem', borderRadius: 'var(--radius-xl)', color: 'white', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid var(--border)', outline: 'none' }}
               />
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <label style={{ fontSize: '0.85rem', fontWeight: '500', color: 'var(--text-secondary)' }}>Email Address</label>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            <label style={{ fontSize: '0.85rem', fontWeight: '500', color: 'var(--text-secondary)', paddingLeft: '0.2rem' }}>Email Address</label>
             <div style={{ position: 'relative' }}>
-              <Mail style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-tertiary)' }} size={18} />
+              <Mail 
+                style={{ 
+                  position: 'absolute', 
+                  left: '1.2rem', 
+                  top: '50%', 
+                  transform: 'translateY(-50%)', 
+                  color: 'var(--accent-primary)',
+                  filter: 'drop-shadow(0 0 8px rgba(99, 102, 241, 0.3))'
+                }} 
+                size={18} 
+              />
               <input
                 name="email"
                 type="email"
@@ -179,34 +196,54 @@ const RegisterPage = () => {
                 onChange={handleChange}
                 placeholder="john@example.com"
                 required
-                className="glass"
-                style={{ width: '100%', padding: '0.875rem 1rem 0.875rem 3rem', borderRadius: 'var(--radius-lg)', color: 'white' }}
+                className="glass-input"
+                style={{ width: '100%', padding: '1rem 1rem 1rem 3.5rem', borderRadius: 'var(--radius-xl)', color: 'white', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid var(--border)', outline: 'none' }}
               />
             </div>
           </div>
 
           {role === 'recruiter' && (
-            <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label style={{ fontSize: '0.85rem', fontWeight: '500', color: 'var(--text-secondary)' }}>Company Name</label>
+            <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+              <label style={{ fontSize: '0.85rem', fontWeight: '500', color: 'var(--text-secondary)', paddingLeft: '0.2rem' }}>Company Name</label>
               <div style={{ position: 'relative' }}>
-                <Building style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-tertiary)' }} size={18} />
+                <Building 
+                  style={{ 
+                    position: 'absolute', 
+                    left: '1.2rem', 
+                    top: '50%', 
+                    transform: 'translateY(-50%)', 
+                    color: 'var(--accent-secondary)',
+                    filter: 'drop-shadow(0 0 8px rgba(168, 85, 247, 0.3))'
+                  }} 
+                  size={18} 
+                />
                 <input
                   name="companyName"
                   value={formData.companyName}
                   onChange={handleChange}
                   placeholder="Tech Solutions LLC"
                   required={role === 'recruiter'}
-                  className="glass"
-                  style={{ width: '100%', padding: '0.875rem 1rem 0.875rem 3rem', borderRadius: 'var(--radius-lg)', color: 'white' }}
+                  className="glass-input"
+                  style={{ width: '100%', padding: '1rem 1rem 1rem 3.5rem', borderRadius: 'var(--radius-xl)', color: 'white', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid var(--border)', outline: 'none' }}
                 />
               </div>
             </div>
           )}
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <label style={{ fontSize: '0.85rem', fontWeight: '500', color: 'var(--text-secondary)' }}>Password</label>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            <label style={{ fontSize: '0.85rem', fontWeight: '500', color: 'var(--text-secondary)', paddingLeft: '0.2rem' }}>Password</label>
             <div style={{ position: 'relative' }}>
-              <Lock style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-tertiary)' }} size={18} />
+              <Lock 
+                style={{ 
+                  position: 'absolute', 
+                  left: '1.2rem', 
+                  top: '50%', 
+                  transform: 'translateY(-50%)', 
+                  color: 'var(--accent-primary)',
+                  filter: 'drop-shadow(0 0 8px rgba(99, 102, 241, 0.3))'
+                }} 
+                size={18} 
+              />
               <input
                 name="password"
                 type="password"
@@ -214,8 +251,8 @@ const RegisterPage = () => {
                 onChange={handleChange}
                 placeholder="••••••••"
                 required
-                className="glass"
-                style={{ width: '100%', padding: '0.875rem 1rem 0.875rem 3rem', borderRadius: 'var(--radius-lg)', color: 'white' }}
+                className="glass-input"
+                style={{ width: '100%', padding: '1rem 1rem 1rem 3.5rem', borderRadius: 'var(--radius-xl)', color: 'white', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid var(--border)', outline: 'none' }}
               />
             </div>
           </div>

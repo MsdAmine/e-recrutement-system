@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../services/authService';
 import { LogIn, Mail, Lock, AlertCircle } from 'lucide-react';
+import { useEffect } from 'react';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -10,8 +11,14 @@ const LoginPage = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   
-  const { login } = useAuth();
+  const { user, login } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -81,43 +88,71 @@ const LoginPage = () => {
         )}
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <label style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--text-secondary)' }}>Email Address</label>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            <label style={{ fontSize: '0.85rem', fontWeight: '500', color: 'var(--text-secondary)', paddingLeft: '0.2rem' }}>Email Address</label>
             <div style={{ position: 'relative' }}>
-              <Mail style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-tertiary)' }} size={18} />
+              <Mail 
+                style={{ 
+                  position: 'absolute', 
+                  left: '1.2rem', 
+                  top: '50%', 
+                  transform: 'translateY(-50%)', 
+                  color: 'var(--accent-primary)',
+                  filter: 'drop-shadow(0 0 8px rgba(99, 102, 241, 0.3))'
+                }} 
+                size={18} 
+              />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@example.com"
+                placeholder="yassine@example.com"
                 required
-                className="glass"
+                className="glass-input"
                 style={{
                   width: '100%',
-                  padding: '0.875rem 1rem 0.875rem 3rem',
-                  borderRadius: 'var(--radius-lg)',
+                  padding: '1rem 1rem 1rem 3.5rem',
+                  borderRadius: 'var(--radius-xl)',
                   color: 'white',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid var(--border)',
+                  outline: 'none',
+                  fontSize: '1rem'
                 }}
               />
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <label style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--text-secondary)' }}>Password</label>
-            <div style={{ position: 'relative' }}>
-              <Lock style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-tertiary)' }} size={18} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            <label style={{ fontSize: '0.85rem', fontWeight: '500', color: 'var(--text-secondary)', paddingLeft: '0.2rem' }}>Password</label>
+            <div style={{ position: 'relative', transition: 'var(--transition)' }}>
+              <Lock 
+                style={{ 
+                  position: 'absolute', 
+                  left: '1.2rem', 
+                  top: '50%', 
+                  transform: 'translateY(-50%)', 
+                  color: 'var(--accent-primary)',
+                  filter: 'drop-shadow(0 0 8px rgba(99, 102, 241, 0.3))'
+                }} 
+                size={18} 
+              />
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
-                className="glass"
+                className="glass-input"
                 style={{
                   width: '100%',
-                  padding: '0.875rem 1rem 0.875rem 3rem',
-                  borderRadius: 'var(--radius-lg)',
+                  padding: '1rem 1rem 1rem 3.5rem',
+                  borderRadius: 'var(--radius-xl)',
                   color: 'white',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid var(--border)',
+                  outline: 'none',
+                  fontSize: '1rem'
                 }}
               />
             </div>
