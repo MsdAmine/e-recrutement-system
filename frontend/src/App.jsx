@@ -6,6 +6,8 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import JobListPage from './pages/JobListPage';
 import JobDetailPage from './pages/JobDetailPage';
+import DashboardPage from './pages/DashboardPage';
+const NotificationsPage = () => <div className="container"><h2>Notifications (Coming Soon)</h2></div>;
 
 // Placeholder Pages
 const Home = () => (
@@ -52,15 +54,7 @@ const Home = () => (
   </div>
 );
 
-const Dashboard = () => {
-  const { user } = useAuth();
-  return (
-    <div className="container">
-      <h2>Welcome, {user?.firstName}!</h2>
-      <p>Role: {user?.role}</p>
-    </div>
-  );
-};
+
 
 // Protected Route Component
 const ProtectedRoute = ({ children, role }) => {
@@ -90,7 +84,15 @@ function App() {
                 path="/dashboard" 
                 element={
                   <ProtectedRoute>
-                    <Dashboard />
+                    <DashboardPage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/notifications" 
+                element={
+                  <ProtectedRoute>
+                    <NotificationsPage />
                   </ProtectedRoute>
                 } 
               />
