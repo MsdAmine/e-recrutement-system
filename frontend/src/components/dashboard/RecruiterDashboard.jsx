@@ -35,7 +35,7 @@ const RecruiterDashboard = () => {
       {/* Header Actions */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h2 style={{ fontSize: '1.5rem' }}>Recruiter <span className="gradient-text">Console</span></h2>
-        <button className="glass" style={{ 
+        <Link to="/post-job" className="glass" style={{ 
           padding: '0.6rem 1.25rem', 
           borderRadius: 'var(--radius-md)', 
           background: 'var(--accent-gradient)',
@@ -43,10 +43,11 @@ const RecruiterDashboard = () => {
           fontWeight: '600',
           display: 'flex',
           alignItems: 'center',
-          gap: '0.5rem'
+          gap: '0.5rem',
+          textDecoration: 'none'
         }}>
           <Plus size={18} /> Post New Job
-        </button>
+        </Link>
       </div>
 
       {/* Stats */}

@@ -7,6 +7,7 @@ import RegisterPage from './pages/RegisterPage';
 import JobListPage from './pages/JobListPage';
 import JobDetailPage from './pages/JobDetailPage';
 import DashboardPage from './pages/DashboardPage';
+import PostJobPage from './pages/PostJobPage';
 const NotificationsPage = () => <div className="container"><h2>Notifications (Coming Soon)</h2></div>;
 
 // Placeholder Pages
@@ -101,6 +102,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <NotificationsPage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/post-job" 
+                element={
+                  <ProtectedRoute role="ROLE_RECRUITER">
+                    <PostJobPage />
                   </ProtectedRoute>
                 } 
               />
