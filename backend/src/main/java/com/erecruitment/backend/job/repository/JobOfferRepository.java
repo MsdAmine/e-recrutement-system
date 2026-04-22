@@ -8,4 +8,7 @@ import java.util.List;
 public interface JobOfferRepository extends JpaRepository<JobOffer, Long> {
     List<JobOffer> findByActiveTrueOrderByCreatedAtDesc();
     List<JobOffer> findByRecruiterIdOrderByCreatedAtDesc(Long recruiterId);
+    long countByRecruiterId(Long recruiterId);
+    long countByRecruiterIdAndActiveTrue(Long recruiterId);
+    long countByRecruiterIdAndActiveFalse(Long recruiterId);
 }
