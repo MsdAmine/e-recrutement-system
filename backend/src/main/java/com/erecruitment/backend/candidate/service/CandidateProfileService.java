@@ -9,6 +9,9 @@ import com.erecruitment.backend.user.entity.User;
 import com.erecruitment.backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.erecruitment.backend.application.repository.JobApplicationRepository;
+import com.erecruitment.backend.candidate.dto.CandidateDashboardResponse;
+import com.erecruitment.backend.common.enums.ApplicationStatus;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +19,7 @@ public class CandidateProfileService {
 
     private final CandidateProfileRepository candidateProfileRepository;
     private final UserRepository userRepository;
+    private final JobApplicationRepository jobApplicationRepository;
 
     public CandidateProfileResponse getMyProfile(String email) {
         User user = userRepository.findByEmail(email)
@@ -55,6 +59,25 @@ public class CandidateProfileService {
                 .headline(profile.getHeadline())
                 .summary(profile.getSummary())
                 .cvUrl(profile.getCvUrl())
+                .build();
+    }
+
+    public CandidateDashboardResponse getMyDashboard(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        long total = jobApplicationRepository.countByCandidateId(user.getId());
+        long pending = jobApplicationRepository.countByCandidateIdAndStatus(user.getId(), ApplicationStatus.PENDING);
+        long inReview = jobApplicationRepository.countByCandidateIdAndStatus(user.getId(), ApplicationStatus.IN_REVIEW);
+        long accepted = jobApplicationRepository.countByCandidateIdAndStatus(user.getId(), ApplicationStatus.ACCEPTED);
+        long rejected = jobApplicationRepository.countByCandidateIdAndStatus(user.getId(), ApplicationStatus.REJECTED);
+
+        return CandidateDashboardResponse.builder()
+                .totalApplications(total)
+                .pendingApplications(pending)
+                .inReviewApplications(inReview)
+                .acceptedApplications(accepted)
+                .rejectedApplications(rejected)
                 .build();
     }
 }

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import com.erecruitment.backend.candidate.dto.CandidateDashboardResponse;
 
 @RestController
 @RequestMapping("/api/candidate/profile")
@@ -27,5 +28,10 @@ public class CandidateProfileController {
             Authentication authentication
     ) {
         return candidateProfileService.updateMyProfile(authentication.getName(), request);
+    }
+
+    @GetMapping("/dashboard")
+    public CandidateDashboardResponse getMyDashboard(Authentication authentication) {
+        return candidateProfileService.getMyDashboard(authentication.getName());
     }
 }

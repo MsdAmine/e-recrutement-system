@@ -12,5 +12,6 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
     List<JobApplication> findByJobOfferRecruiterIdOrderByAppliedAtDesc(Long recruiterId);
     List<JobApplication> findByJobOfferIdOrderByAppliedAtDesc(Long jobOfferId);
     Optional<JobApplication> findByIdAndJobOfferRecruiterId(Long id, Long recruiterId);
-
+    long countByCandidateId(Long candidateId);
+    long countByCandidateIdAndStatus(Long candidateId, com.erecruitment.backend.common.enums.ApplicationStatus status);
 }
