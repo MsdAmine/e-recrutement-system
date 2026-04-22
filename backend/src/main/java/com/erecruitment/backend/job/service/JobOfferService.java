@@ -9,6 +9,8 @@ import com.erecruitment.backend.job.repository.JobOfferRepository;
 import com.erecruitment.backend.user.entity.User;
 import com.erecruitment.backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -68,11 +70,9 @@ public class JobOfferService {
         jobOfferRepository.delete(jobOffer);
     }
 
-    public List<JobOfferResponse> getAllActiveJobOffers() {
-        return jobOfferRepository.findByActiveTrueOrderByCreatedAtDesc()
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+    public Page<JobOfferResponse> getAllActiveJobOffers(Pageable pageable) {
+        return jobOfferRepository.findByActiveTrue(pageable)
+                .map(this::mapToResponse);
     }
 
     public JobOfferResponse getJobOfferById(Long id) {

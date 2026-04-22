@@ -5,6 +5,8 @@ import com.erecruitment.backend.job.dto.JobOfferResponse;
 import com.erecruitment.backend.job.service.JobOfferService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -20,8 +22,8 @@ public class JobOfferController {
     private final JobOfferService jobOfferService;
 
     @GetMapping
-    public List<JobOfferResponse> getAllActiveJobOffers() {
-        return jobOfferService.getAllActiveJobOffers();
+    public Page<JobOfferResponse> getAllActiveJobOffers(Pageable pageable) {
+        return jobOfferService.getAllActiveJobOffers(pageable);
     }
 
     @GetMapping("/{id}")
