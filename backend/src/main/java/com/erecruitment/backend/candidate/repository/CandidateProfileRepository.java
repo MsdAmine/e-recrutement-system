@@ -1,6 +1,9 @@
 package com.erecruitment.backend.candidate.repository;
 
+import com.erecruitment.backend.application.entity.JobApplication;
 import com.erecruitment.backend.candidate.entity.CandidateProfile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

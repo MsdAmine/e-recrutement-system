@@ -1,5 +1,6 @@
 package com.erecruitment.backend.candidate.service;
 
+import com.erecruitment.backend.application.dto.JobApplicationResponse;
 import com.erecruitment.backend.candidate.dto.CandidateProfileResponse;
 import com.erecruitment.backend.candidate.dto.UpdateCandidateProfileRequest;
 import com.erecruitment.backend.candidate.entity.CandidateProfile;
@@ -8,6 +9,8 @@ import com.erecruitment.backend.common.exception.ResourceNotFoundException;
 import com.erecruitment.backend.user.entity.User;
 import com.erecruitment.backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.erecruitment.backend.application.repository.JobApplicationRepository;
 import com.erecruitment.backend.candidate.dto.CandidateDashboardResponse;
@@ -80,4 +83,5 @@ public class CandidateProfileService {
                 .rejectedApplications(rejected)
                 .build();
     }
+
 }

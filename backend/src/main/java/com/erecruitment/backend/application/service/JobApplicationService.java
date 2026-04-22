@@ -15,6 +15,8 @@ import com.erecruitment.backend.job.repository.JobOfferRepository;
 import com.erecruitment.backend.user.entity.User;
 import com.erecruitment.backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.erecruitment.backend.common.enums.NotificationType;
 import com.erecruitment.backend.notification.service.NotificationService;
@@ -66,14 +68,12 @@ public class JobApplicationService {
         return mapToResponse(saved);
     }
 
-    public List<JobApplicationResponse> getMyApplications(String candidateEmail) {
-        User candidate = userRepository.findByEmail(candidateEmail)
-                .orElseThrow(() -> new ResourceNotFoundException("Candidate not found"));
+    public Page<JobApplicationResponse> getMyApplications(String email, Pageable pageable) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        return jobApplicationRepository.findByCandidateIdOrderByAppliedAtDesc(candidate.getId())
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        return jobApplicationRepository.findByCandidateId(user.getId(), pageable)
+                .map(this::mapToResponse);
     }
 
     public JobApplicationResponse getMyApplicationById(Long applicationId, String candidateEmail) {
@@ -90,14 +90,23 @@ public class JobApplicationService {
         return mapToResponse(application);
     }
 
-    public List<JobApplicationResponse> getApplicationsForRecruiter(String recruiterEmail) {
-        User recruiter = userRepository.findByEmail(recruiterEmail)
-                .orElseThrow(() -> new ResourceNotFoundException("Recruiter not found"));
+    public Page<JobApplicationResponse> getRecruiterApplications(
+            String email,
+            ApplicationStatus status,
+            Pageable pageable
+    ) {
+        User recruiter = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        return jobApplicationRepository.findByJobOfferRecruiterIdOrderByAppliedAtDesc(recruiter.getId())
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        if (status != null) {
+            return jobApplicationRepository
+                    .findByJobOfferRecruiterIdAndStatus(recruiter.getId(), status, pageable)
+                    .map(this::mapToResponse);
+        }
+
+        return jobApplicationRepository
+                .findByJobOfferRecruiterId(recruiter.getId(), pageable)
+                .map(this::mapToResponse);
     }
 
     public JobApplicationResponse updateApplicationStatus(
@@ -124,7 +133,11 @@ public class JobApplicationService {
         return mapToResponse(updated);
     }
 
-    public List<JobApplicationResponse> getApplicationsForSpecificJobOffer(Long jobOfferId, String recruiterEmail) {
+    public Page<JobApplicationResponse> getApplicationsForSpecificJobOffer(
+            Long jobOfferId,
+            String recruiterEmail,
+            Pageable pageable
+    ) {
         User recruiter = userRepository.findByEmail(recruiterEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("Recruiter not found"));
 
@@ -135,10 +148,8 @@ public class JobApplicationService {
             throw new ForbiddenOperationException("You can only access applications for your own job offers.");
         }
 
-        return jobApplicationRepository.findByJobOfferIdOrderByAppliedAtDesc(jobOfferId)
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        return jobApplicationRepository.findByJobOfferId(jobOfferId, pageable)
+                .map(this::mapToResponse);
     }
 
     private JobApplicationResponse mapToResponse(JobApplication application) {

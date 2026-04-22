@@ -13,10 +13,8 @@ public interface JobOfferRepository extends JpaRepository<JobOffer, Long> {
     @EntityGraph(attributePaths = {"recruiter"})
     Page<JobOffer> findByActiveTrue(Pageable pageable);
 
-    List<JobOffer> findByActiveTrueOrderByCreatedAtDesc();
-
     @EntityGraph(attributePaths = {"recruiter"})
-    List<JobOffer> findByRecruiterIdOrderByCreatedAtDesc(Long recruiterId);
+    Page<JobOffer> findByRecruiterId(Long recruiterId, Pageable pageable);
 
     long countByRecruiterId(Long recruiterId);
     long countByRecruiterIdAndActiveTrue(Long recruiterId);

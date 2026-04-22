@@ -4,8 +4,11 @@ import com.erecruitment.backend.application.dto.ApplyJobRequest;
 import com.erecruitment.backend.application.dto.JobApplicationResponse;
 import com.erecruitment.backend.application.dto.UpdateApplicationStatusRequest;
 import com.erecruitment.backend.application.service.JobApplicationService;
+import com.erecruitment.backend.common.enums.ApplicationStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -32,9 +35,11 @@ public class JobApplicationController {
     }
 
     @GetMapping("/me")
-    @PreAuthorize("hasRole('CANDIDATE')")
-    public List<JobApplicationResponse> getMyApplications(Authentication authentication) {
-        return jobApplicationService.getMyApplications(authentication.getName());
+    public Page<JobApplicationResponse> getMyApplications(
+            Authentication authentication,
+            Pageable pageable
+    ) {
+        return jobApplicationService.getMyApplications(authentication.getName(), pageable);
     }
 
     @GetMapping("/me/{applicationId}")
@@ -48,8 +53,16 @@ public class JobApplicationController {
 
     @GetMapping("/recruiter")
     @PreAuthorize("hasRole('RECRUITER')")
-    public List<JobApplicationResponse> getApplicationsForRecruiter(Authentication authentication) {
-        return jobApplicationService.getApplicationsForRecruiter(authentication.getName());
+    public Page<JobApplicationResponse> getRecruiterApplications(
+            Authentication authentication,
+            @RequestParam(required = false) ApplicationStatus status,
+            Pageable pageable
+    ) {
+        return jobApplicationService.getRecruiterApplications(
+                authentication.getName(),
+                status,
+                pageable
+        );
     }
 
     @PatchMapping("/{applicationId}/status")
@@ -64,10 +77,15 @@ public class JobApplicationController {
 
     @GetMapping("/recruiter/job-offers/{jobOfferId}")
     @PreAuthorize("hasRole('RECRUITER')")
-    public List<JobApplicationResponse> getApplicationsForSpecificJobOffer(
+    public Page<JobApplicationResponse> getApplicationsForSpecificJobOffer(
             @PathVariable Long jobOfferId,
-            Authentication authentication
+            Authentication authentication,
+            Pageable pageable
     ) {
-        return jobApplicationService.getApplicationsForSpecificJobOffer(jobOfferId, authentication.getName());
+        return jobApplicationService.getApplicationsForSpecificJobOffer(
+                jobOfferId,
+                authentication.getName(),
+                pageable
+        );
     }
 }

@@ -82,14 +82,12 @@ public class JobOfferService {
         return mapToResponse(jobOffer);
     }
 
-    public List<JobOfferResponse> getMyJobOffers(String recruiterEmail) {
+    public Page<JobOfferResponse> getMyJobOffers(String recruiterEmail, Pageable pageable) {
         User recruiter = userRepository.findByEmail(recruiterEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("Recruiter not found"));
 
-        return jobOfferRepository.findByRecruiterIdOrderByCreatedAtDesc(recruiter.getId())
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        return jobOfferRepository.findByRecruiterId(recruiter.getId(), pageable)
+                .map(this::mapToResponse);
     }
 
     private JobOfferResponse mapToResponse(JobOffer jobOffer) {

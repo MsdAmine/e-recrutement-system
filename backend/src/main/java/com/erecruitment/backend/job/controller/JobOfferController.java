@@ -33,8 +33,11 @@ public class JobOfferController {
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('RECRUITER')")
-    public List<JobOfferResponse> getMyJobOffers(Authentication authentication) {
-        return jobOfferService.getMyJobOffers(authentication.getName());
+    public Page<JobOfferResponse> getMyJobOffers(
+            Authentication authentication,
+            Pageable pageable
+    ) {
+        return jobOfferService.getMyJobOffers(authentication.getName(), pageable);
     }
 
     @PostMapping

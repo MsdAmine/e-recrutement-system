@@ -9,6 +9,8 @@ import com.erecruitment.backend.notification.repository.NotificationRepository;
 import com.erecruitment.backend.user.entity.User;
 import com.erecruitment.backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,24 +32,20 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-    public List<NotificationResponse> getMyNotifications(String userEmail) {
+    public Page<NotificationResponse> getMyNotifications(String userEmail, Pageable pageable) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        return notificationRepository.findByRecipientIdOrderByCreatedAtDesc(user.getId())
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        return notificationRepository.findByRecipientId(user.getId(), pageable)
+                .map(this::mapToResponse);
     }
 
-    public List<NotificationResponse> getMyUnreadNotifications(String userEmail) {
+    public Page<NotificationResponse> getMyUnreadNotifications(String userEmail, Pageable pageable) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        return notificationRepository.findByRecipientIdAndReadFalseOrderByCreatedAtDesc(user.getId())
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        return notificationRepository.findByRecipientIdAndReadFalse(user.getId(), pageable)
+                .map(this::mapToResponse);
     }
 
     public NotificationResponse markAsRead(Long notificationId, String userEmail) {
