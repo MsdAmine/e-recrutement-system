@@ -23,11 +23,14 @@ The backend currently includes these modules:
 
 - Authentication and authorization
 - User and role management
-- Candidate profile
-- Recruiter profile
+- Candidate profile management
+- Recruiter profile management
+- Candidate dashboard summary
+- Recruiter dashboard summary
 - Job offer management
 - Job application management
 - Notifications
+- Pagination and partial filtering
 
 ---
 
@@ -60,6 +63,11 @@ The backend uses JWT-based stateless authentication.
 ```http
 Authorization: Bearer <JWT_TOKEN>
 ```
+
+### Token behavior
+- Valid token -> request proceeds normally
+- Expired token -> `401` with `{"status": 401, "error": "Token expired"}`
+- Invalid token -> `401` with `{"status": 401, "error": "Invalid token"}`
 
 ---
 
@@ -191,29 +199,161 @@ Frontend use:
 
 ---
 
-## 7.3 Job Offers
+## 7.3 Candidate Profile
+
+### Get current candidate profile
+**GET** `/api/candidate/profile`
+
+Auth required: candidate only
+
+Response:
+```json
+{
+  "userId": 1,
+  "firstName": "Massine",
+  "lastName": "Amakhtari",
+  "email": "massine@example.com",
+  "phone": "0612345678",
+  "address": "Casablanca, Morocco",
+  "headline": "Java Backend Developer",
+  "summary": "Backend-focused software engineering student with Spring Boot and PostgreSQL experience.",
+  "cvUrl": "https://example.com/cv/massine.pdf"
+}
+```
+
+### Update current candidate profile
+**PUT** `/api/candidate/profile`
+
+Auth required: candidate only
+
+Request body:
+```json
+{
+  "phone": "0612345678",
+  "address": "Casablanca, Morocco",
+  "headline": "Java Backend Developer",
+  "summary": "Backend-focused software engineering student with Spring Boot and PostgreSQL experience.",
+  "cvUrl": "https://example.com/cv/massine.pdf"
+}
+```
+
+---
+
+## 7.4 Recruiter Profile
+
+### Get current recruiter profile
+**GET** `/api/recruiter/profile`
+
+Auth required: recruiter only
+
+Response:
+```json
+{
+  "userId": 2,
+  "firstName": "Amine",
+  "lastName": "Moussaid",
+  "email": "amine@example.com",
+  "companyName": "TechCorp",
+  "companyWebsite": "https://techcorp.example.com",
+  "companySector": "Software Engineering",
+  "companyDescription": "TechCorp is building modern enterprise software solutions."
+}
+```
+
+### Update current recruiter profile
+**PUT** `/api/recruiter/profile`
+
+Auth required: recruiter only
+
+Request body:
+```json
+{
+  "companyName": "TechCorp",
+  "companyWebsite": "https://techcorp.example.com",
+  "companySector": "Software Engineering",
+  "companyDescription": "TechCorp is building modern enterprise software solutions."
+}
+```
+
+---
+
+## 7.5 Candidate Dashboard
+
+### Get candidate dashboard summary
+**GET** `/api/candidate/profile/dashboard`
+
+Auth required: candidate only
+
+Response shape:
+```json
+{
+  "totalApplications": 2,
+  "pendingApplications": 0,
+  "inReviewApplications": 0,
+  "acceptedApplications": 2,
+  "rejectedApplications": 0
+}
+```
+
+---
+
+## 7.6 Recruiter Dashboard
+
+### Get recruiter dashboard summary
+**GET** `/api/recruiter/profile/dashboard`
+
+Auth required: recruiter only
+
+Response shape:
+```json
+{
+  "totalJobOffers": 2,
+  "activeJobOffers": 2,
+  "inactiveJobOffers": 0,
+  "totalApplicationsReceived": 2,
+  "pendingApplications": 0,
+  "inReviewApplications": 0,
+  "acceptedApplications": 2,
+  "rejectedApplications": 0
+}
+```
+
+---
+
+## 7.7 Job Offers
 
 ### Get all active job offers
 **GET** `/api/job-offers`
 
 Public endpoint.
 
-Response:
+Supports pagination:
+```text
+GET /api/job-offers?page=0&size=5
+```
+
+Paginated response shape:
 ```json
-[
-  {
-    "id": 2,
-    "title": "Java Backend Developer",
-    "description": "We are looking for a backend developer with Spring Boot experience.",
-    "contractType": "CDI",
-    "location": "Casablanca",
-    "salary": 12000.00,
-    "active": true,
-    "createdAt": "2026-04-17T20:25:37.131498",
-    "recruiterId": 2,
-    "recruiterEmail": "amine@example.com"
-  }
-]
+{
+  "content": [
+    {
+      "id": 2,
+      "title": "Java Backend Developer",
+      "description": "We are looking for a backend developer with Spring Boot experience.",
+      "contractType": "CDI",
+      "location": "Casablanca",
+      "salary": 12000.00,
+      "active": true,
+      "createdAt": "2026-04-17T20:32:16.465376",
+      "recruiterId": 2,
+      "recruiterEmail": "amine@example.com"
+    }
+  ],
+  "totalElements": 2,
+  "totalPages": 1,
+  "size": 5,
+  "number": 0
+}
 ```
 
 ### Get job offer by id
@@ -225,6 +365,11 @@ Public endpoint.
 **GET** `/api/job-offers/me`
 
 Auth required: recruiter only
+
+Supports pagination:
+```text
+GET /api/job-offers/me?page=0&size=5
+```
 
 ### Create job offer
 **POST** `/api/job-offers`
@@ -257,7 +402,7 @@ Only the recruiter who owns the offer can delete it.
 
 ---
 
-## 7.4 Applications
+## 7.8 Applications
 
 ### Apply to a job offer
 **POST** `/api/applications/job-offers/{jobOfferId}`
@@ -294,6 +439,11 @@ Important rule:
 
 Auth required: candidate only
 
+Supports pagination:
+```text
+GET /api/applications/me?page=0&size=5
+```
+
 ### Get one of my applications by id
 **GET** `/api/applications/me/{applicationId}`
 
@@ -305,11 +455,32 @@ Can only access own applications.
 
 Auth required: recruiter only
 
+Supports pagination:
+```text
+GET /api/applications/recruiter?page=0&size=5
+```
+
+Supports optional filtering by status:
+```text
+GET /api/applications/recruiter?status=ACCEPTED&page=0&size=5
+```
+
+Allowed status filters:
+- `PENDING`
+- `IN_REVIEW`
+- `ACCEPTED`
+- `REJECTED`
+
 ### Get applications for a specific recruiter-owned job offer
 **GET** `/api/applications/recruiter/job-offers/{jobOfferId}`
 
 Auth required: recruiter only
 Can only access applications for job offers owned by the authenticated recruiter.
+
+Supports pagination:
+```text
+GET /api/applications/recruiter/job-offers/{jobOfferId}?page=0&size=5
+```
 
 ### Update application status
 **PATCH** `/api/applications/{applicationId}/status`
@@ -332,7 +503,7 @@ Allowed statuses:
 
 ---
 
-## 7.5 Notifications
+## 7.9 Notifications
 
 Notifications are stored in the database and exposed through REST endpoints.
 
@@ -345,10 +516,20 @@ Notifications are stored in the database and exposed through REST endpoints.
 
 Auth required: yes
 
+Supports pagination:
+```text
+GET /api/notifications?page=0&size=5
+```
+
 ### Get unread notifications
 **GET** `/api/notifications/unread`
 
 Auth required: yes
+
+Supports pagination:
+```text
+GET /api/notifications/unread?page=0&size=5
+```
 
 ### Mark one notification as read
 **PATCH** `/api/notifications/{notificationId}/read`
@@ -392,11 +573,17 @@ Example notification response:
 - `/api/notifications/**`
 
 ## Candidate-only routes
+- `GET /api/candidate/profile`
+- `PUT /api/candidate/profile`
+- `GET /api/candidate/profile/dashboard`
 - `POST /api/applications/job-offers/{jobOfferId}`
 - `GET /api/applications/me`
 - `GET /api/applications/me/{applicationId}`
 
 ## Recruiter-only routes
+- `GET /api/recruiter/profile`
+- `PUT /api/recruiter/profile`
+- `GET /api/recruiter/profile/dashboard`
 - `GET /api/job-offers/me`
 - `POST /api/job-offers`
 - `PUT /api/job-offers/{id}`
@@ -413,6 +600,8 @@ Example notification response:
 - login is email/password based
 - password is encrypted with BCrypt
 - backend returns JWT token on register and login
+- expired token returns `401`
+- invalid token returns `401`
 
 ### Job offers
 - only recruiters can create, update, delete offers
@@ -424,9 +613,13 @@ Example notification response:
 - candidate cannot apply twice to the same offer
 - candidate can only access their own applications
 - recruiter can only access applications related to their own offers
+- recruiter applications endpoint supports optional status filtering
 
 ### Notifications
 - users can only read and update their own notifications
+
+### Profiles
+- users can only read and update their own profile
 
 ---
 
@@ -469,7 +662,23 @@ Examples:
 }
 ```
 
-Note: unauthenticated protected requests currently return `403` in the current configuration. This can be refined later to return `401` with a dedicated authentication entry point if needed.
+### Expired token
+```json
+{
+  "status": 401,
+  "error": "Token expired"
+}
+```
+
+### Invalid token
+```json
+{
+  "status": 401,
+  "error": "Invalid token"
+}
+```
+
+Note: some unauthenticated protected requests may still return `403` depending on the endpoint and current security flow, but expired and malformed JWTs now return `401` explicitly.
 
 ---
 
@@ -484,22 +693,26 @@ Note: unauthenticated protected requests currently return `403` in the current c
 1. register or login
 2. store JWT
 3. call `/api/users/me`
-4. show candidate dashboard
-5. browse job offers
-6. apply to an offer
-7. view own applications
-8. view notifications
+4. call `/api/candidate/profile`
+5. call `/api/candidate/profile/dashboard`
+6. show candidate dashboard
+7. browse job offers
+8. apply to an offer
+9. view own applications
+10. view notifications
 
 ## Recruiter app flow
 1. register or login
 2. store JWT
 3. call `/api/users/me`
-4. show recruiter dashboard
-5. create/manage job offers
-6. view applications across offers
-7. view applications for one specific offer
-8. update application statuses
-9. view notifications
+4. call `/api/recruiter/profile`
+5. call `/api/recruiter/profile/dashboard`
+6. show recruiter dashboard
+7. create/manage job offers
+8. view applications across offers
+9. view applications for one specific offer
+10. update application statuses
+11. view notifications
 
 ---
 
@@ -515,8 +728,8 @@ Later this can be upgraded if needed.
 ### API client
 Recommended frontend behavior:
 - attach `Authorization: Bearer <token>` automatically on authenticated requests
-- centralize 403 handling
-- redirect to login when token is missing or invalid
+- centralize 401 and 403 handling
+- redirect to login when token is missing, expired, or invalid
 
 ### Session bootstrap
 On app load:
@@ -525,20 +738,36 @@ On app load:
 3. if success, restore session
 4. if failure, clear token and redirect to login
 
+### Pagination
+The frontend should now expect Spring Data `Page` responses on these endpoints:
+- `/api/job-offers`
+- `/api/job-offers/me`
+- `/api/applications/me`
+- `/api/applications/recruiter`
+- `/api/applications/recruiter/job-offers/{jobOfferId}`
+- `/api/notifications`
+- `/api/notifications/unread`
+
+Important `Page` fields typically used by the frontend:
+- `content`
+- `totalElements`
+- `totalPages`
+- `size`
+- `number`
+- `first`
+- `last`
+- `empty`
+
 ---
 
 ## 13. Known Gaps / Next Backend Improvements
 These are not blockers for current frontend work, but they are not yet implemented:
 
 - admin business endpoints
-- pagination
-- filtering by application status
-- recruiter dashboard stats
+- job offer search and filtering by keyword/location/contract type
 - CV file upload
-- company profile management endpoints beyond registration foundation
-- candidate profile edit endpoints
 - refresh token flow
-- custom `401 Unauthorized` entry point
+- custom centralized auth entry point for fully consistent unauthorized behavior
 - OpenAPI / Swagger documentation
 - automated tests beyond manual API validation
 
@@ -561,13 +790,11 @@ Recommended rule:
 ## 15. Suggested Immediate Next Backend Tasks
 If backend work continues in parallel, the next high-value tasks are:
 
-- candidate profile read/update endpoints
-- recruiter company profile read/update endpoints
-- pagination for offers/applications/notifications
-- filtering applications by status
-- recruiter dashboard stats
 - OpenAPI documentation
-- seed/demo data strategy for frontend dev environment
+- seed/demo data strategy for frontend development
+- job offer search and filtering
+- profile validation improvements
+- file upload for CVs
 
 ---
 
@@ -579,6 +806,16 @@ If backend work continues in parallel, the next high-value tasks are:
 - [x] login
 - [x] current user
 
+### Profiles
+- [x] get candidate profile
+- [x] update candidate profile
+- [x] get recruiter profile
+- [x] update recruiter profile
+
+### Dashboards
+- [x] candidate dashboard summary
+- [x] recruiter dashboard summary
+
 ### Job Offers
 - [x] list public offers
 - [x] get public offer detail
@@ -586,6 +823,8 @@ If backend work continues in parallel, the next high-value tasks are:
 - [x] update offer
 - [x] delete offer
 - [x] get recruiter-owned offers
+- [x] paginate public offers
+- [x] paginate recruiter-owned offers
 
 ### Applications
 - [x] apply to offer
@@ -594,16 +833,21 @@ If backend work continues in parallel, the next high-value tasks are:
 - [x] get recruiter applications
 - [x] get recruiter applications by offer
 - [x] update application status
+- [x] paginate candidate applications
+- [x] paginate recruiter applications
+- [x] paginate recruiter applications by offer
+- [x] filter recruiter applications by status
 
 ### Notifications
 - [x] get notifications
 - [x] get unread notifications
 - [x] mark one as read
 - [x] mark all as read
+- [x] paginate notifications
+- [x] paginate unread notifications
 
 ---
 
 ## 17. Final Note
-The backend is already in a usable MVP state for frontend integration.
-The frontend developer can start immediately with authentication, job offer browsing, application flow, recruiter management, and notifications.
-
+The backend is already in a usable MVP-plus state for frontend integration.
+The frontend developer can start immediately with authentication, profile pages, dashboards, job offer browsing, application flow, recruiter management, notifications, and paginated list screens.
