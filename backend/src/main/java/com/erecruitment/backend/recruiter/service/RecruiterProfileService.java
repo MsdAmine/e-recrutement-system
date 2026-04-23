@@ -45,8 +45,8 @@ public class RecruiterProfileService {
         profile.setCompanySector(request.companySector());
         profile.setCompanyDescription(request.companyDescription());
 
-        RecruiterProfile updated = recruiterProfileRepository.save(profile);
-        return mapToResponse(updated);
+        recruiterProfileRepository.save(profile);
+        return mapToResponse(profile);
     }
 
     private RecruiterProfileResponse mapToResponse(RecruiterProfile profile) {

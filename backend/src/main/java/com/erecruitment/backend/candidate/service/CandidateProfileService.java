@@ -47,8 +47,8 @@ public class CandidateProfileService {
         profile.setSummary(request.summary());
         profile.setCvUrl(request.cvUrl());
 
-        CandidateProfile updated = candidateProfileRepository.save(profile);
-        return mapToResponse(updated);
+        candidateProfileRepository.save(profile);
+        return mapToResponse(profile);
     }
 
     private CandidateProfileResponse mapToResponse(CandidateProfile profile) {

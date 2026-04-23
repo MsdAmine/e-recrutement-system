@@ -6,7 +6,7 @@ import { applicationService } from "@/services/applicationService";
 import { jobOfferService } from "@/services/jobOfferService";
 import { queryKeys } from "@/lib/queryKeys";
 import { formatDate } from "@/lib/utils";
-import { ApplicationStatus } from "@/types";
+import { Application, ApplicationStatus, Page } from "@/types";
 import { ApplicationStatusBadge } from "@/components/shared/ApplicationStatusBadge";
 import { Pagination } from "@/components/shared/Pagination";
 import {
@@ -49,8 +49,30 @@ export function JobOfferApplicationsPage() {
   const statusMutation = useMutation({
     mutationFn: ({ appId, status }: { appId: number; status: ApplicationStatus }) =>
       applicationService.updateStatus(appId, { status }),
-    onSuccess: () => {
+    onSuccess: (updatedApplication) => {
+      const patchStatus = (oldPage: Page<Application> | undefined) => {
+        if (!oldPage) return oldPage;
+        return {
+          ...oldPage,
+          content: oldPage.content.map((app) =>
+            app.id === updatedApplication.id
+              ? { ...app, status: updatedApplication.status }
+              : app
+          ),
+        };
+      };
+
+      queryClient.setQueriesData<Page<Application>>(
+        { queryKey: ["jobOfferApplications"] },
+        patchStatus
+      );
+      queryClient.setQueriesData<Page<Application>>(
+        { queryKey: ["recruiterApplications"] },
+        patchStatus
+      );
+
       queryClient.invalidateQueries({ queryKey: ["jobOfferApplications"] });
+      queryClient.invalidateQueries({ queryKey: ["recruiterApplications"] });
     },
   });
 
@@ -68,7 +90,7 @@ export function JobOfferApplicationsPage() {
         description={
           data
             ? `${data.totalElements} candidate${data.totalElements !== 1 ? "s" : ""} applied`
-            : "Loading…"
+            : "Loading..."
         }
       />
 
@@ -151,7 +173,7 @@ export function JobOfferApplicationsPage() {
                       </SelectContent>
                     </Select>
                     {statusMutation.isPending && (
-                      <span className="text-xs text-muted-foreground">Saving…</span>
+                      <span className="text-xs text-muted-foreground">Saving...</span>
                     )}
                   </div>
                 </motion.div>
@@ -170,3 +192,4 @@ export function JobOfferApplicationsPage() {
     </div>
   );
 }
+

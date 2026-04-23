@@ -1,23 +1,26 @@
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "motion/react";
+import { AxiosError } from "axios";
 import { applicationService } from "@/services/applicationService";
 import { queryKeys } from "@/lib/queryKeys";
 import { formatDateTime } from "@/lib/utils";
+import { ApiError } from "@/types";
 import { ApplicationStatusBadge } from "@/components/shared/ApplicationStatusBadge";
-import { Skeleton, PageHeader } from "@/components/shared/SharedComponents";
+import { ErrorDisplay, Skeleton, PageHeader } from "@/components/shared/SharedComponents";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ArrowLeftIcon, CalendarIcon, BriefcaseIcon, AlignLeftIcon } from "lucide-react";
 
 export function ApplicationDetailPage() {
-  const { id } = useParams<{ id: string }>();
-  const appId = Number(id);
+  const { applicationId } = useParams<{ applicationId: string }>();
+  const appId = Number(applicationId);
+  const isValidAppId = Number.isInteger(appId) && appId > 0;
 
-  const { data: app, isLoading } = useQuery({
+  const { data: app, isLoading, isError, error, refetch } = useQuery({
     queryKey: queryKeys.myApplication(appId),
     queryFn: () => applicationService.getMyApplicationById(appId),
-    enabled: !!appId,
+    enabled: isValidAppId,
   });
 
   if (isLoading) {
@@ -25,6 +28,36 @@ export function ApplicationDetailPage() {
       <div className="max-w-2xl mx-auto space-y-4 animate-in">
         <Skeleton className="h-8 w-56" />
         <Skeleton className="h-48 rounded-xl" />
+      </div>
+    );
+  }
+
+  if (!isValidAppId) {
+    return (
+      <div className="max-w-2xl mx-auto text-center py-12 animate-in">
+        <p className="text-muted-foreground">Invalid application URL.</p>
+        <Button variant="outline" className="mt-4" asChild>
+          <Link to="/candidate/applications">Back to Applications</Link>
+        </Button>
+      </div>
+    );
+  }
+
+  if (isError) {
+    const loadErrorMessage =
+      error instanceof AxiosError
+        ? (error.response?.data as ApiError | undefined)?.detail ??
+          (error.response?.data as ApiError | undefined)?.error ??
+          "Failed to load application details."
+        : "Failed to load application details.";
+
+    return (
+      <div className="max-w-2xl mx-auto animate-in">
+        <ErrorDisplay
+          title="Unable to load application"
+          message={loadErrorMessage}
+          onRetry={refetch}
+        />
       </div>
     );
   }

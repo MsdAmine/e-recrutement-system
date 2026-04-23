@@ -13,8 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class JobOfferService {
@@ -41,7 +39,7 @@ public class JobOfferService {
     }
 
     public JobOfferResponse updateJobOffer(Long id, String recruiterEmail, JobOfferRequest request) {
-        JobOffer jobOffer = jobOfferRepository.findById(id)
+        JobOffer jobOffer = jobOfferRepository.findOneWithRecruiterById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Job offer not found"));
 
         if (!jobOffer.getRecruiter().getEmail().equals(recruiterEmail)) {
@@ -60,7 +58,7 @@ public class JobOfferService {
     }
 
     public void deleteJobOffer(Long id, String recruiterEmail) {
-        JobOffer jobOffer = jobOfferRepository.findById(id)
+        JobOffer jobOffer = jobOfferRepository.findOneWithRecruiterById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Job offer not found"));
 
         if (!jobOffer.getRecruiter().getEmail().equals(recruiterEmail)) {
@@ -76,7 +74,7 @@ public class JobOfferService {
     }
 
     public JobOfferResponse getJobOfferById(Long id) {
-        JobOffer jobOffer = jobOfferRepository.findById(id)
+        JobOffer jobOffer = jobOfferRepository.findOneWithRecruiterById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Job offer not found"));
 
         return mapToResponse(jobOffer);

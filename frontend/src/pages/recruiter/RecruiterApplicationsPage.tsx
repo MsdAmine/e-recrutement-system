@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import { applicationService } from "@/services/applicationService";
 import { queryKeys } from "@/lib/queryKeys";
 import { formatDate } from "@/lib/utils";
-import { ApplicationStatus } from "@/types";
+import { Application, ApplicationStatus, Page } from "@/types";
 import { ApplicationStatusBadge } from "@/components/shared/ApplicationStatusBadge";
 import { Pagination } from "@/components/shared/Pagination";
 import {
@@ -58,8 +58,30 @@ export function RecruiterApplicationsPage() {
       appId: number;
       status: ApplicationStatus;
     }) => applicationService.updateStatus(appId, { status }),
-    onSuccess: () => {
+    onSuccess: (updatedApplication) => {
+      const patchStatus = (oldPage: Page<Application> | undefined) => {
+        if (!oldPage) return oldPage;
+        return {
+          ...oldPage,
+          content: oldPage.content.map((app) =>
+            app.id === updatedApplication.id
+              ? { ...app, status: updatedApplication.status }
+              : app
+          ),
+        };
+      };
+
+      queryClient.setQueriesData<Page<Application>>(
+        { queryKey: ["recruiterApplications"] },
+        patchStatus
+      );
+      queryClient.setQueriesData<Page<Application>>(
+        { queryKey: ["jobOfferApplications"] },
+        patchStatus
+      );
+
       queryClient.invalidateQueries({ queryKey: ["recruiterApplications"] });
+      queryClient.invalidateQueries({ queryKey: ["jobOfferApplications"] });
     },
   });
 
@@ -158,7 +180,7 @@ export function RecruiterApplicationsPage() {
                       </SelectContent>
                     </Select>
                     {statusMutation.isPending && (
-                      <span className="text-xs text-muted-foreground">Saving…</span>
+                      <span className="text-xs text-muted-foreground">Saving...</span>
                     )}
                   </div>
                 </motion.div>
@@ -177,3 +199,4 @@ export function RecruiterApplicationsPage() {
     </div>
   );
 }
+

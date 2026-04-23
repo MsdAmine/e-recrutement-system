@@ -44,7 +44,7 @@ function App() {
           <Route path="/candidate/profile" element={<CandidateProfilePage />} />
           <Route path="/candidate/profile/edit" element={<EditCandidateProfilePage />} />
           <Route path="/candidate/applications" element={<CandidateApplicationsPage />} />
-          <Route path="/candidate/applications/:id" element={<ApplicationDetailPage />} />
+          <Route path="/candidate/applications/:applicationId" element={<ApplicationDetailPage />} />
           <Route path="/candidate/notifications" element={<NotificationsPage />} />
         </Route>
       </Route>
