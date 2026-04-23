@@ -17,7 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/shared/SharedComponents";
+import { ErrorDisplay, Skeleton } from "@/components/shared/SharedComponents";
 import {
   MapPinIcon,
   BanknoteIcon,
@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { AxiosError } from "axios";
 import { ApiError } from "@/types";
+import { getJobsPath } from "@/lib/auth";
 
 const applySchema = z.object({
   coverLetter: z
@@ -41,16 +42,24 @@ type ApplyForm = z.infer<typeof applySchema>;
 export function JobOfferDetailPage() {
   const { id } = useParams<{ id: string }>();
   const offerId = Number(id);
+  const isValidOfferId = Number.isInteger(offerId) && offerId > 0;
   const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [applied, setApplied] = useState(false);
   const [applyError, setApplyError] = useState<string | null>(null);
+  const jobsPath = getJobsPath(user?.role);
 
-  const { data: offer, isLoading } = useQuery({
+  const {
+    data: offer,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: queryKeys.jobOffer(offerId),
-    queryFn: () => jobOfferService.getOfferById(offerId),
-    enabled: !!offerId,
+    queryFn: () => jobOfferService.getPublicOfferById(offerId),
+    enabled: isValidOfferId,
   });
 
   const {
@@ -87,11 +96,46 @@ export function JobOfferDetailPage() {
     );
   }
 
+  if (!isValidOfferId) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-12 text-center">
+        <p className="text-muted-foreground">Invalid job offer URL.</p>
+        <Button variant="outline" className="mt-4" onClick={() => navigate(jobsPath)}>
+          Back to Jobs
+        </Button>
+      </div>
+    );
+  }
+
+  if (isError) {
+    const loadErrorMessage =
+      error instanceof AxiosError
+        ? (error.response?.data as ApiError | undefined)?.detail ??
+          (error.response?.data as ApiError | undefined)?.error ??
+          "Failed to load this job offer."
+        : "Failed to load this job offer.";
+
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-12">
+        <ErrorDisplay
+          title="Unable to load job offer"
+          message={loadErrorMessage}
+          onRetry={refetch}
+        />
+        <div className="mt-4 text-center">
+          <Button variant="outline" onClick={() => navigate(jobsPath)}>
+            Back to Jobs
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   if (!offer) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-12 text-center">
         <p className="text-muted-foreground">Job offer not found.</p>
-        <Button variant="outline" className="mt-4" onClick={() => navigate("/jobs")}>
+        <Button variant="outline" className="mt-4" onClick={() => navigate(jobsPath)}>
           Back to Jobs
         </Button>
       </div>
@@ -103,7 +147,7 @@ export function JobOfferDetailPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
       <Button variant="ghost" size="sm" className="mb-6 -ml-2" asChild>
-        <Link to="/jobs">
+        <Link to={isAuthenticated ? jobsPath : "/jobs"}>
           <ArrowLeftIcon className="h-4 w-4" />
           Back to Jobs
         </Link>
@@ -158,7 +202,7 @@ export function JobOfferDetailPage() {
         {/* Apply section */}
         {applied ? (
           <div className="rounded-xl border border-success/30 bg-success/10 p-6 text-center">
-            <div className="text-3xl mb-2">🎉</div>
+            <div className="text-3xl mb-2">Success</div>
             <h3 className="font-semibold text-success mb-1">Application Submitted!</h3>
             <p className="text-sm text-muted-foreground mb-4">
               Your application has been sent. Track it in your applications.
@@ -180,7 +224,7 @@ export function JobOfferDetailPage() {
                 </label>
                 <Textarea
                   id="cover-letter"
-                  placeholder="Tell the recruiter why you're a great fit for this role…"
+                  placeholder="Tell the recruiter why you're a great fit for this role..."
                   className="min-h-[140px]"
                   {...register("coverLetter")}
                 />
@@ -218,3 +262,4 @@ export function JobOfferDetailPage() {
     </div>
   );
 }
+

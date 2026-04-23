@@ -23,7 +23,7 @@ interface NavItem {
 
 const candidateNav: NavItem[] = [
   { label: "Dashboard", href: "/candidate/dashboard", icon: <LayoutDashboardIcon className="h-4 w-4" /> },
-  { label: "Browse Jobs", href: "/jobs", icon: <BriefcaseIcon className="h-4 w-4" /> },
+  { label: "Browse Jobs", href: "/candidate/jobs", icon: <BriefcaseIcon className="h-4 w-4" /> },
   { label: "My Applications", href: "/candidate/applications", icon: <FileTextIcon className="h-4 w-4" /> },
   { label: "Profile", href: "/candidate/profile", icon: <UserIcon className="h-4 w-4" /> },
   { label: "Notifications", href: "/candidate/notifications", icon: <BellIcon className="h-4 w-4" /> },
@@ -78,7 +78,7 @@ export function AppSidebar({ className, onNavigate }: AppSidebarProps) {
       <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-0.5">
         {navItems.map((item) => {
           const isActive = location.pathname === item.href ||
-            (item.href !== "/jobs" && location.pathname.startsWith(item.href));
+            location.pathname.startsWith(`${item.href}/`);
           return (
             <Link
               key={item.href}

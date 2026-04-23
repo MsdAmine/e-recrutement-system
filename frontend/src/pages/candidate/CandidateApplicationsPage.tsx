@@ -28,7 +28,7 @@ export function CandidateApplicationsPage() {
         description={data ? `${data.totalElements} application${data.totalElements !== 1 ? "s" : ""} total` : ""}
         action={
           <Button size="sm" asChild>
-            <Link to="/jobs">
+            <Link to="/candidate/jobs">
               <BriefcaseIcon className="h-4 w-4" />
               Find Jobs
             </Link>
@@ -59,7 +59,7 @@ export function CandidateApplicationsPage() {
               description="Start applying to jobs and your submissions will appear here."
               action={
                 <Button asChild size="sm">
-                  <Link to="/jobs">Browse Jobs</Link>
+                  <Link to="/candidate/jobs">Browse Jobs</Link>
                 </Button>
               }
             />

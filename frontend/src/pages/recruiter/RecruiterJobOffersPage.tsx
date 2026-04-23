@@ -24,11 +24,14 @@ import {
   UsersIcon,
   CalendarIcon,
 } from "lucide-react";
+import { AxiosError } from "axios";
+import { ApiError } from "@/types";
 
 const PAGE_SIZE = 10;
 
 export function RecruiterJobOffersPage() {
   const [page, setPage] = useState(0);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   const { data, isLoading, isError, refetch } = useQuery({
@@ -39,12 +42,27 @@ export function RecruiterJobOffersPage() {
   const deleteMutation = useMutation({
     mutationFn: jobOfferService.deleteOffer,
     onSuccess: () => {
+      setDeleteError(null);
       queryClient.invalidateQueries({ queryKey: ["myJobOffers"] });
+      queryClient.invalidateQueries({ queryKey: ["jobOffers"] });
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        const data = error.response?.data as ApiError;
+        setDeleteError(
+          data?.detail ||
+            data?.error ||
+            "Failed to delete this job offer. Please try again."
+        );
+        return;
+      }
+      setDeleteError("Failed to delete this job offer. Please try again.");
     },
   });
 
   const handleDelete = (id: number, title: string) => {
     if (window.confirm(`Delete "${title}"? This cannot be undone.`)) {
+      setDeleteError(null);
       deleteMutation.mutate(id);
     }
   };
@@ -82,6 +100,12 @@ export function RecruiterJobOffersPage() {
 
       {!isLoading && !isError && data && (
         <>
+          {deleteError && (
+            <div className="mb-4 rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2.5 text-sm text-destructive">
+              {deleteError}
+            </div>
+          )}
+
           {data.content.length === 0 ? (
             <EmptyState
               icon={<BriefcaseIcon className="h-12 w-12" />}

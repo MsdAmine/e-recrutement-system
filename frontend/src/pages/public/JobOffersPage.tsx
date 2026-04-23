@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import { jobOfferService } from "@/services/jobOfferService";
 import { queryKeys } from "@/lib/queryKeys";
+import { useAuth } from "@/store/authStore";
+import { getJobDetailPath } from "@/lib/auth";
 import { formatDate, formatSalary, getContractTypeLabel } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -26,6 +28,7 @@ const PAGE_SIZE = 9;
 export function JobOffersPage() {
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState("");
+  const { user } = useAuth();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: queryKeys.jobOffers(page, PAGE_SIZE),
@@ -50,7 +53,7 @@ export function JobOffersPage() {
           Browse Opportunities
         </h1>
         <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-          Discover {data?.totalElements ?? "—"} active job offers from top companies.
+          Discover {data?.totalElements ?? "-"} active job offers from top companies.
         </p>
       </div>
 
@@ -147,7 +150,7 @@ export function JobOffersPage() {
                       {formatDate(offer.createdAt)}
                     </span>
                     <Button size="sm" variant="outline" asChild className="group/btn">
-                      <Link to={`/jobs/${offer.id}`}>
+                      <Link to={getJobDetailPath(user?.role, offer.id)}>
                         View Details
                         <ArrowUpRightIcon className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
                       </Link>
@@ -171,3 +174,4 @@ export function JobOffersPage() {
     </div>
   );
 }
+

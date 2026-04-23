@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { FormField, PageHeader, Skeleton } from "@/components/shared/SharedComponents";
 import { ArrowLeftIcon, SaveIcon } from "lucide-react";
+import { AxiosError } from "axios";
+import { ApiError } from "@/types";
 
 const schema = z.object({
   companyName: z.string().min(1, "Company name is required"),
@@ -20,6 +22,11 @@ const schema = z.object({
 });
 
 type FormValues = z.infer<typeof schema>;
+
+function normalizeOptional(value?: string) {
+  const trimmed = value?.trim();
+  return trimmed ? trimmed : undefined;
+}
 
 export function EditRecruiterProfilePage() {
   const navigate = useNavigate();
@@ -46,12 +53,30 @@ export function EditRecruiterProfilePage() {
   }, [profile, reset]);
 
   const mutation = useMutation({
-    mutationFn: recruiterService.updateProfile,
+    mutationFn: (values: FormValues) =>
+      recruiterService.updateProfile({
+        companyName: values.companyName.trim(),
+        companyWebsite: normalizeOptional(values.companyWebsite),
+        companySector: normalizeOptional(values.companySector),
+        companyDescription: normalizeOptional(values.companyDescription),
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.recruiterProfile });
       navigate("/recruiter/profile");
     },
   });
+
+  const getErrorMessage = (error: unknown) => {
+    if (error instanceof AxiosError) {
+      const data = error.response?.data as ApiError;
+      return (
+        data?.detail ||
+        data?.error ||
+        "Failed to update profile. Please try again."
+      );
+    }
+    return "Failed to update profile. Please try again.";
+  };
 
   if (isLoading) {
     return (
@@ -84,7 +109,7 @@ export function EditRecruiterProfilePage() {
           <FormField label="Company Description" error={errors.companyDescription?.message} description="Tell candidates about your company (max 1000 characters)">
             <Textarea
               id="edit-r-description"
-              placeholder="Describe your company, culture, and what makes it a great place to work…"
+              placeholder="Describe your company, culture, and what makes it a great place to work..."
               className="min-h-[120px]"
               {...register("companyDescription")}
             />
@@ -92,7 +117,7 @@ export function EditRecruiterProfilePage() {
 
           {mutation.isError && (
             <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2.5 text-sm text-destructive">
-              Failed to update profile. Please try again.
+              {getErrorMessage(mutation.error)}
             </div>
           )}
 
@@ -113,3 +138,4 @@ export function EditRecruiterProfilePage() {
     </div>
   );
 }
+

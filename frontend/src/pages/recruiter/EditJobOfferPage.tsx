@@ -10,8 +10,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FormField, PageHeader, Skeleton } from "@/components/shared/SharedComponents";
+import {
+  ErrorDisplay,
+  FormField,
+  PageHeader,
+  Skeleton,
+} from "@/components/shared/SharedComponents";
 import { ArrowLeftIcon, SaveIcon } from "lucide-react";
+import { AxiosError } from "axios";
+import { ApiError } from "@/types";
 
 const CONTRACT_TYPES = ["CDI", "CDD", "STAGE", "FREELANCE", "INTERIM"] as const;
 
@@ -36,13 +43,14 @@ type FormValues = z.infer<typeof schema>;
 export function EditJobOfferPage() {
   const { id } = useParams<{ id: string }>();
   const offerId = Number(id);
+  const isValidOfferId = Number.isInteger(offerId) && offerId > 0;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { data: offer, isLoading } = useQuery({
+  const { data: offer, isLoading, isError, error, refetch } = useQuery({
     queryKey: queryKeys.jobOffer(offerId),
-    queryFn: () => jobOfferService.getOfferById(offerId),
-    enabled: !!offerId,
+    queryFn: () => jobOfferService.getMyOfferById(offerId),
+    enabled: isValidOfferId,
   });
 
   const { register, handleSubmit, control, reset, formState: { errors } } = useForm<FormValues>({
@@ -84,6 +92,41 @@ export function EditJobOfferPage() {
       <div className="max-w-2xl mx-auto space-y-4 animate-in">
         <Skeleton className="h-8 w-48" />
         <Skeleton className="h-80 rounded-xl" />
+      </div>
+    );
+  }
+
+  if (!isValidOfferId) {
+    return (
+      <div className="max-w-2xl mx-auto text-center py-12 animate-in">
+        <p className="text-muted-foreground">Invalid job offer ID.</p>
+        <Button variant="outline" className="mt-4" asChild>
+          <Link to="/recruiter/job-offers">Back to Job Offers</Link>
+        </Button>
+      </div>
+    );
+  }
+
+  if (isError) {
+    const loadErrorMessage =
+      error instanceof AxiosError
+        ? (error.response?.data as ApiError | undefined)?.detail ??
+          (error.response?.data as ApiError | undefined)?.error ??
+          "Failed to load this job offer."
+        : "Failed to load this job offer.";
+
+    return (
+      <div className="max-w-2xl mx-auto animate-in">
+        <ErrorDisplay
+          title="Unable to load job offer"
+          message={loadErrorMessage}
+          onRetry={refetch}
+        />
+        <div className="mt-4 text-center">
+          <Button variant="outline" asChild>
+            <Link to="/recruiter/job-offers">Back to Job Offers</Link>
+          </Button>
+        </div>
       </div>
     );
   }

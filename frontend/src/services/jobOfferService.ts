@@ -12,6 +12,27 @@ export interface CreateJobOfferPayload {
 
 export type UpdateJobOfferPayload = CreateJobOfferPayload;
 
+const FALLBACK_PAGE_SIZE = 50;
+const MAX_FALLBACK_PAGES = 20;
+
+async function findOfferInPagedResult(
+  fetchPage: (page: number, size: number) => Promise<Page<JobOffer>>,
+  id: number
+): Promise<JobOffer | null> {
+  let page = 0;
+  let totalPages = 1;
+
+  while (page < totalPages && page < MAX_FALLBACK_PAGES) {
+    const result = await fetchPage(page, FALLBACK_PAGE_SIZE);
+    const match = result.content.find((offer) => offer.id === id);
+    if (match) return match;
+    totalPages = result.totalPages;
+    page += 1;
+  }
+
+  return null;
+}
+
 export const jobOfferService = {
   getPublicOffers: async (
     page = 0,
@@ -28,11 +49,34 @@ export const jobOfferService = {
     return data;
   },
 
+  getPublicOfferById: async (id: number): Promise<JobOffer> => {
+    try {
+      return await jobOfferService.getOfferById(id);
+    } catch (error) {
+      const fallback = await findOfferInPagedResult(
+        jobOfferService.getPublicOffers,
+        id
+      );
+      if (fallback) return fallback;
+      throw error;
+    }
+  },
+
   getMyOffers: async (page = 0, size = 10): Promise<Page<JobOffer>> => {
     const { data } = await apiClient.get<Page<JobOffer>>(
       `/job-offers/me?page=${page}&size=${size}`
     );
     return data;
+  },
+
+  getMyOfferById: async (id: number): Promise<JobOffer> => {
+    try {
+      return await jobOfferService.getOfferById(id);
+    } catch (error) {
+      const fallback = await findOfferInPagedResult(jobOfferService.getMyOffers, id);
+      if (fallback) return fallback;
+      throw error;
+    }
   },
 
   createOffer: async (payload: CreateJobOfferPayload): Promise<JobOffer> => {

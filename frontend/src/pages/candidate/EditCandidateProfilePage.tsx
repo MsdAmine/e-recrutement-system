@@ -11,6 +11,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { FormField, PageHeader, Skeleton } from "@/components/shared/SharedComponents";
 import { ArrowLeftIcon, SaveIcon } from "lucide-react";
 import { useEffect } from "react";
+import { AxiosError } from "axios";
+import { ApiError } from "@/types";
 
 const schema = z.object({
   phone: z.string().optional(),
@@ -21,6 +23,11 @@ const schema = z.object({
 });
 
 type FormValues = z.infer<typeof schema>;
+
+function normalizeOptional(value?: string) {
+  const trimmed = value?.trim();
+  return trimmed ? trimmed : undefined;
+}
 
 export function EditCandidateProfilePage() {
   const navigate = useNavigate();
@@ -48,12 +55,31 @@ export function EditCandidateProfilePage() {
   }, [profile, reset]);
 
   const mutation = useMutation({
-    mutationFn: candidateService.updateProfile,
+    mutationFn: (values: FormValues) =>
+      candidateService.updateProfile({
+        phone: normalizeOptional(values.phone),
+        address: normalizeOptional(values.address),
+        headline: normalizeOptional(values.headline),
+        summary: normalizeOptional(values.summary),
+        cvUrl: normalizeOptional(values.cvUrl),
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.candidateProfile });
       navigate("/candidate/profile");
     },
   });
+
+  const getErrorMessage = (error: unknown) => {
+    if (error instanceof AxiosError) {
+      const data = error.response?.data as ApiError;
+      return (
+        data?.detail ||
+        data?.error ||
+        "Failed to update profile. Please try again."
+      );
+    }
+    return "Failed to update profile. Please try again.";
+  };
 
   if (isLoading) {
     return (
@@ -90,7 +116,7 @@ export function EditCandidateProfilePage() {
           <FormField label="Summary" error={errors.summary?.message} description="Tell recruiters about yourself (max 1000 characters)">
             <Textarea
               id="edit-c-summary"
-              placeholder="Describe your experience, skills, and what you're looking for…"
+              placeholder="Describe your experience, skills, and what you're looking for..."
               className="min-h-[120px]"
               {...register("summary")}
             />
@@ -98,7 +124,7 @@ export function EditCandidateProfilePage() {
 
           {mutation.isError && (
             <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2.5 text-sm text-destructive">
-              Failed to update profile. Please try again.
+              {getErrorMessage(mutation.error)}
             </div>
           )}
 
@@ -119,3 +145,4 @@ export function EditCandidateProfilePage() {
     </div>
   );
 }
+

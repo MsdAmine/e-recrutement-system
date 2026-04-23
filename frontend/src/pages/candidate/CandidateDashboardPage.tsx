@@ -42,7 +42,7 @@ export function CandidateDashboardPage() {
         description="Here's a summary of your recruitment activity."
         action={
           <Button asChild size="sm">
-            <Link to="/jobs">
+            <Link to="/candidate/jobs">
               <BriefcaseIcon className="h-4 w-4" />
               Browse Jobs
             </Link>
@@ -144,7 +144,7 @@ export function CandidateDashboardPage() {
               {
                 label: "Browse Jobs",
                 description: "Find new opportunities",
-                href: "/jobs",
+                href: "/candidate/jobs",
                 icon: <BriefcaseIcon className="h-5 w-5" />,
               },
               {

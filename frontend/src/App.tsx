@@ -39,6 +39,8 @@ function App() {
         <Route element={<AppLayout />}>
           <Route path="/candidate" element={<Navigate to="/candidate/dashboard" replace />} />
           <Route path="/candidate/dashboard" element={<CandidateDashboardPage />} />
+          <Route path="/candidate/jobs" element={<JobOffersPage />} />
+          <Route path="/candidate/jobs/:id" element={<JobOfferDetailPage />} />
           <Route path="/candidate/profile" element={<CandidateProfilePage />} />
           <Route path="/candidate/profile/edit" element={<EditCandidateProfilePage />} />
           <Route path="/candidate/applications" element={<CandidateApplicationsPage />} />
@@ -51,6 +53,8 @@ function App() {
         <Route element={<AppLayout />}>
           <Route path="/recruiter" element={<Navigate to="/recruiter/dashboard" replace />} />
           <Route path="/recruiter/dashboard" element={<RecruiterDashboardPage />} />
+          <Route path="/recruiter/jobs" element={<JobOffersPage />} />
+          <Route path="/recruiter/jobs/:id" element={<JobOfferDetailPage />} />
           <Route path="/recruiter/profile" element={<RecruiterProfilePage />} />
           <Route path="/recruiter/profile/edit" element={<EditRecruiterProfilePage />} />
           <Route path="/recruiter/job-offers" element={<RecruiterJobOffersPage />} />

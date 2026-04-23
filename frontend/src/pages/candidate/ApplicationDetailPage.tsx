@@ -99,7 +99,7 @@ export function ApplicationDetailPage() {
 
         {/* View job link */}
         <Button variant="outline" size="sm" asChild>
-          <Link to={`/jobs/${app.jobOfferId}`}>
+          <Link to={`/candidate/jobs/${app.jobOfferId}`}>
             <BriefcaseIcon className="h-4 w-4" />
             View Job Offer
           </Link>
