@@ -12,6 +12,7 @@ import {
   StarIcon,
   BuildingIcon,
   TrendingUpIcon,
+  SparklesIcon,
 } from "lucide-react";
 
 const stats = [
@@ -65,20 +66,20 @@ export function LandingPage() {
 
   return (
     <div className="overflow-hidden">
-      {/* Hero */}
-      <section className="relative min-h-[90vh] flex items-center justify-center px-4">
-        {/* Background gradient orbs */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 h-[600px] w-[600px] rounded-full bg-primary/5 blur-3xl" />
-          <div className="absolute -bottom-40 -left-40 h-[600px] w-[600px] rounded-full bg-primary/5 blur-3xl" />
+      <section className="relative min-h-[92vh] flex items-center justify-center px-4 py-12">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,hsl(var(--primary)/0.12),transparent_35%),radial-gradient(circle_at_80%_15%,hsl(var(--primary)/0.08),transparent_35%)]" />
+          <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(hsl(var(--border))_1px,transparent_1px),linear-gradient(90deg,hsl(var(--border))_1px,transparent_1px)] [background-size:48px_48px]" />
+          <div className="absolute -top-48 -right-40 h-[680px] w-[680px] rounded-full bg-primary/10 blur-3xl" />
+          <div className="absolute -bottom-48 -left-40 h-[640px] w-[640px] rounded-full bg-primary/10 blur-3xl" />
         </div>
 
-        <div className="relative mx-auto max-w-4xl text-center">
+        <div className="relative mx-auto max-w-5xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-sm text-muted-foreground shadow-sm"
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-1.5 text-sm text-primary shadow-sm"
           >
             <StarIcon className="h-3.5 w-3.5 text-warning fill-warning" />
             Trusted by 900+ companies worldwide
@@ -88,12 +89,10 @@ export function LandingPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.6 }}
-            className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-6"
+            className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.08] mb-6"
           >
             Find your dream job,{" "}
-            <span className="relative">
-              <span className="text-gradient">faster</span>
-            </span>
+            <span className="text-gradient">faster</span>
           </motion.h1>
 
           <motion.p
@@ -112,7 +111,7 @@ export function LandingPage() {
             transition={{ delay: 0.3, duration: 0.6 }}
             className="flex flex-col sm:flex-row gap-3 justify-center"
           >
-            <Button size="lg" asChild className="text-base px-8">
+            <Button size="lg" asChild className="text-base px-8 shadow-md shadow-primary/20">
               <Link to="/jobs">
                 Browse Jobs
                 <ArrowRightIcon className="h-4 w-4" />
@@ -123,29 +122,34 @@ export function LandingPage() {
             </Button>
           </motion.div>
 
-          {/* Stats */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.6 }}
-            className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6"
+            transition={{ delay: 0.45, duration: 0.6 }}
+            className="mt-14 grid grid-cols-2 sm:grid-cols-4 gap-4"
           >
             {stats.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="text-3xl font-bold tracking-tight">{stat.value}</div>
-                <div className="text-sm text-muted-foreground mt-0.5">{stat.label}</div>
+              <div
+                key={stat.label}
+                className="rounded-xl border border-border/70 bg-card/75 backdrop-blur-sm px-4 py-4 shadow-sm"
+              >
+                <div className="text-2xl sm:text-3xl font-bold tracking-tight">{stat.value}</div>
+                <div className="text-xs sm:text-sm text-muted-foreground mt-1">{stat.label}</div>
               </div>
             ))}
           </motion.div>
         </div>
       </section>
 
-      {/* Features */}
       <section className="py-24 px-4 bg-muted/30 border-y border-border">
         <div className="mx-auto max-w-6xl">
           <div className="text-center mb-14">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-3.5 py-1 kicker normal-case tracking-normal">
+              <SparklesIcon className="h-3.5 w-3.5 text-primary" />
+              Platform Benefits
+            </div>
             <h2 className="text-3xl sm:text-4xl font-bold mb-3">
-              Everything you need to hire & get hired
+              Everything you need to hire and get hired
             </h2>
             <p className="text-muted-foreground text-lg max-w-xl mx-auto">
               A modern recruitment experience built for speed, clarity, and results.
@@ -161,13 +165,14 @@ export function LandingPage() {
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeUp}
-                className="rounded-xl border border-border bg-card p-6 hover:shadow-md transition-shadow"
+                className="group relative overflow-hidden rounded-2xl border border-border/80 bg-card p-6 shadow-sm hover:border-primary/35 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200"
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary mb-4">
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                <div className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary mb-4 ring-1 ring-primary/20">
                   {feature.icon}
                 </div>
-                <h3 className="font-semibold mb-1.5">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
+                <h3 className="relative font-semibold mb-1.5">{feature.title}</h3>
+                <p className="relative text-sm text-muted-foreground leading-relaxed">
                   {feature.description}
                 </p>
               </motion.div>
@@ -176,7 +181,6 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* CTA */}
       <section className="py-24 px-4">
         <div className="mx-auto max-w-3xl text-center">
           <motion.div
@@ -184,6 +188,7 @@ export function LandingPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
+            className="rounded-2xl border border-border/80 bg-card/80 p-10 shadow-sm"
           >
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
               Ready to take the next step?

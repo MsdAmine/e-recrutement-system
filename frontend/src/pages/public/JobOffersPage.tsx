@@ -17,6 +17,8 @@ import {
   CalendarIcon,
   SearchIcon,
   BuildingIcon,
+  SparklesIcon,
+  ArrowUpRightIcon,
 } from "lucide-react";
 
 const PAGE_SIZE = 9;
@@ -39,28 +41,31 @@ export function JobOffersPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-      {/* Header */}
       <div className="text-center mb-10">
-        <h1 className="text-4xl font-bold mb-3">Browse Opportunities</h1>
-        <p className="text-muted-foreground text-lg">
+        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1.5 text-xs font-medium text-primary">
+          <SparklesIcon className="h-3.5 w-3.5" />
+          Curated Opportunities
+        </div>
+        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-3">
+          Browse Opportunities
+        </h1>
+        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
           Discover {data?.totalElements ?? "—"} active job offers from top companies.
         </p>
       </div>
 
-      {/* Search */}
       <div className="relative max-w-xl mx-auto mb-10">
         <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
         <Input
           id="jobs-search"
           type="text"
-          placeholder="Search by title or location…"
-          className="pl-10 h-11 rounded-xl bg-card"
+          placeholder="Search by title or location..."
+          className="pl-10 h-11 rounded-xl bg-card/90 border-border/80 shadow-sm focus-visible:ring-primary/40"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
 
-      {/* Loading skeleton */}
       {isLoading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {Array.from({ length: 6 }).map((_, i) => (
@@ -81,7 +86,6 @@ export function JobOffersPage() {
         </div>
       )}
 
-      {/* Grid */}
       {!isLoading && filtered !== undefined && (
         <>
           {filtered.length === 0 ? (
@@ -97,12 +101,14 @@ export function JobOffersPage() {
                   key={offer.id}
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.04, duration: 0.4 }}
-                  className="group rounded-xl border border-border bg-card p-5 hover:shadow-md hover:border-primary/30 transition-all duration-200 flex flex-col"
+                  whileHover={{ y: -3 }}
+                  transition={{ delay: i * 0.04, duration: 0.35 }}
+                  className="surface-card surface-card-hover group relative overflow-hidden p-5 flex flex-col"
                 >
-                  {/* Company icon placeholder */}
-                  <div className="flex items-start gap-3 mb-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+
+                  <div className="relative flex items-start gap-3 mb-4">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/20">
                       <BuildingIcon className="h-5 w-5" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -115,11 +121,11 @@ export function JobOffersPage() {
                     </div>
                   </div>
 
-                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 mb-4 flex-1">
+                  <p className="relative text-sm text-muted-foreground leading-relaxed line-clamp-2 mb-4 flex-1">
                     {offer.description}
                   </p>
 
-                  <div className="flex flex-wrap gap-2 mb-4">
+                  <div className="relative flex flex-wrap gap-2 mb-4">
                     <Badge variant="secondary" className="gap-1">
                       <MapPinIcon className="h-3 w-3" />
                       {offer.location}
@@ -135,13 +141,16 @@ export function JobOffersPage() {
                     )}
                   </div>
 
-                  <div className="flex items-center justify-between">
+                  <div className="relative flex items-center justify-between">
                     <span className="text-xs text-muted-foreground flex items-center gap-1">
                       <CalendarIcon className="h-3 w-3" />
                       {formatDate(offer.createdAt)}
                     </span>
-                    <Button size="sm" variant="outline" asChild>
-                      <Link to={`/jobs/${offer.id}`}>View Details</Link>
+                    <Button size="sm" variant="outline" asChild className="group/btn">
+                      <Link to={`/jobs/${offer.id}`}>
+                        View Details
+                        <ArrowUpRightIcon className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+                      </Link>
                     </Button>
                   </div>
                 </motion.article>

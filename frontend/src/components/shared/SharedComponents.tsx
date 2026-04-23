@@ -50,23 +50,26 @@ export function StatCard({ label, value, icon, className, colorClass }: StatCard
   return (
     <div
       className={cn(
-        "rounded-xl border border-border bg-card p-5 flex items-center gap-4",
+        "group relative overflow-hidden rounded-2xl border border-border/80 bg-card/90 p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5",
         className
       )}
     >
-      {icon && (
-        <div
-          className={cn(
-            "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl",
-            colorClass ?? "bg-primary/10 text-primary"
-          )}
-        >
-          {icon}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+      <div className="relative flex items-center gap-4">
+        {icon && (
+          <div
+            className={cn(
+              "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ring-1 ring-border/60 transition-transform duration-200 group-hover:scale-105",
+              colorClass ?? "bg-primary/10 text-primary"
+            )}
+          >
+            {icon}
+          </div>
+        )}
+        <div>
+          <p className="text-2xl font-bold tracking-tight leading-none">{value}</p>
+          <p className="text-sm text-muted-foreground mt-1">{label}</p>
         </div>
-      )}
-      <div>
-        <p className="text-2xl font-bold tracking-tight">{value}</p>
-        <p className="text-sm text-muted-foreground">{label}</p>
       </div>
     </div>
   );

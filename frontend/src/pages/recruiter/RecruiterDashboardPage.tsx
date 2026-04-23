@@ -29,7 +29,7 @@ export function RecruiterDashboardPage() {
   return (
     <div className="max-w-5xl mx-auto animate-in">
       <PageHeader
-        title={`Welcome, ${user?.firstName} 👋`}
+        title={`Welcome, ${user?.firstName}`}
         description="Your recruitment pipeline at a glance."
         action={
           <Button asChild size="sm">
@@ -41,8 +41,7 @@ export function RecruiterDashboardPage() {
         }
       />
 
-      {/* Job Offer Stats */}
-      <div className="mb-3">
+      <div className="mb-4">
         <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
           Job Offers
         </p>
@@ -76,7 +75,6 @@ export function RecruiterDashboardPage() {
         ) : null}
       </div>
 
-      {/* Application Stats */}
       <div className="mb-8">
         <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
           Applications Received
@@ -117,14 +115,15 @@ export function RecruiterDashboardPage() {
         ) : null}
       </div>
 
-      {/* Quick Actions */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="rounded-xl border border-border bg-card p-5"
+        className="surface-card p-5"
       >
-        <h2 className="font-semibold text-sm mb-4">Quick Actions</h2>
+        <h2 className="font-semibold text-sm tracking-wide uppercase text-muted-foreground mb-4">
+          Quick Actions
+        </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {[
             {
@@ -149,18 +148,19 @@ export function RecruiterDashboardPage() {
             <Link
               key={item.href}
               to={item.href}
-              className="flex items-center gap-3 p-3.5 rounded-lg border border-border hover:border-primary/40 hover:bg-accent/50 transition-all group"
+              className="group relative overflow-hidden flex items-center gap-3 p-3.5 rounded-xl border border-border/80 bg-card/60 hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-md transition-all duration-200"
             >
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+              <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/20">
                 {item.icon}
               </div>
-              <div className="flex-1">
+              <div className="relative flex-1">
                 <p className="text-sm font-medium group-hover:text-primary transition-colors">
                   {item.label}
                 </p>
                 <p className="text-xs text-muted-foreground">{item.description}</p>
               </div>
-              <ArrowRightIcon className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+              <ArrowRightIcon className="relative h-3.5 w-3.5 text-muted-foreground opacity-0 -translate-x-1 group-hover:translate-x-0 group-hover:opacity-100 transition-all" />
             </Link>
           ))}
         </div>

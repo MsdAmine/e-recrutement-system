@@ -99,6 +99,18 @@
     @apply bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent;
   }
 
+  .surface-card {
+    @apply rounded-2xl border border-border/80 bg-card shadow-sm;
+  }
+
+  .surface-card-hover {
+    @apply transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-lg hover:shadow-primary/5;
+  }
+
+  .kicker {
+    @apply text-xs font-semibold uppercase tracking-widest text-muted-foreground;
+  }
+
   .animate-in {
     animation: fade-in 0.4s ease-out both;
   }
