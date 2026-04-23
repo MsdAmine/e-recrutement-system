@@ -13,26 +13,33 @@ import java.util.Optional;
 public interface JobApplicationRepository extends JpaRepository<JobApplication, Long> {
     boolean existsByCandidateIdAndJobOfferId(Long candidateId, Long jobOfferId);
 
+    @EntityGraph(attributePaths = { "candidate", "jobOffer" })
     Optional<JobApplication> findByIdAndJobOfferRecruiterId(Long id, Long recruiterId);
 
     long countByCandidateId(Long candidateId);
-    long countByCandidateIdAndStatus(Long candidateId, com.erecruitment.backend.common.enums.ApplicationStatus status);
-    long countByJobOfferRecruiterId(Long recruiterId);
-    long countByJobOfferRecruiterIdAndStatus(Long recruiterId, com.erecruitment.backend.common.enums.ApplicationStatus status);
 
-    @EntityGraph(attributePaths = {"candidate", "jobOffer"})
+    long countByCandidateIdAndStatus(Long candidateId, com.erecruitment.backend.common.enums.ApplicationStatus status);
+
+    long countByJobOfferRecruiterId(Long recruiterId);
+
+    long countByJobOfferRecruiterIdAndStatus(Long recruiterId,
+            com.erecruitment.backend.common.enums.ApplicationStatus status);
+
+    @EntityGraph(attributePaths = { "candidate", "jobOffer" })
     Page<JobApplication> findByCandidateId(Long candidateId, Pageable pageable);
 
-    @EntityGraph(attributePaths = {"candidate", "jobOffer"})
+    @EntityGraph(attributePaths = { "candidate", "jobOffer" })
     Page<JobApplication> findByJobOfferRecruiterId(Long recruiterId, Pageable pageable);
 
-    @EntityGraph(attributePaths = {"candidate", "jobOffer"})
+    @EntityGraph(attributePaths = { "candidate", "jobOffer" })
     Page<JobApplication> findByJobOfferRecruiterIdAndStatus(
             Long recruiterId,
             ApplicationStatus status,
-            Pageable pageable
-    );
+            Pageable pageable);
 
-    @EntityGraph(attributePaths = {"candidate", "jobOffer"})
+    @EntityGraph(attributePaths = { "candidate", "jobOffer" })
     Page<JobApplication> findByJobOfferId(Long jobOfferId, Pageable pageable);
+
+    @EntityGraph(attributePaths = { "candidate", "jobOffer" })
+    Optional<JobApplication> findWithRelationsById(Long id);
 }
