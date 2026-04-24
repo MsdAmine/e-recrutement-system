@@ -13,10 +13,11 @@ export function AppLayout() {
   const navigate = useNavigate();
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  const isRecruiter = user?.role === "ROLE_RECRUITER";
+    const isRecruiter = user?.role === "ROLE_RECRUITER";
+    const isAdmin = user?.role === "ROLE_ADMIN";
   const notificationsHref = isRecruiter
     ? "/recruiter/notifications"
-    : "/candidate/notifications";
+    : (isAdmin ? "/admin/dashboard" : "/candidate/notifications");
 
   const handleLogout = () => {
     logout();
@@ -85,7 +86,7 @@ export function AppLayout() {
               </Link>
             </Button>
             <Link
-              to={isRecruiter ? "/recruiter/profile" : "/candidate/profile"}
+              to={isAdmin ? "/admin/dashboard" : (isRecruiter ? "/recruiter/profile" : "/candidate/profile")}
               className="flex items-center gap-2 hover:opacity-80 transition-opacity"
             >
               <Avatar className="h-7 w-7">

@@ -120,6 +120,27 @@ export interface Page<T> {
   empty: boolean;
 }
 
+// ── Admin ──────────────────────────────────────────────────
+export interface PlatformStats {
+  totalUsers: number;
+  totalCandidates: number;
+  totalRecruiters: number;
+  totalJobOffers: number;
+  totalApplications: number;
+}
+
+export interface User {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  enabled: boolean;
+  role: {
+    id: number;
+    name: Role;
+  };
+}
+
 // ── API Error ─────────────────────────────────────────────
 export interface ApiError {
   type?: string;
