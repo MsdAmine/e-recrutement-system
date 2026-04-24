@@ -20,17 +20,17 @@ public class AdminController {
     private final AdminService adminService;
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<com.erecruitment.backend.user.dto.UserResponse>> getAllUsers() {
         return ResponseEntity.ok(adminService.getAllUsers());
     }
 
     @PatchMapping("/users/{id}/toggle-status")
-    public ResponseEntity<User> toggleUserStatus(@PathVariable Long id) {
+    public ResponseEntity<com.erecruitment.backend.user.dto.UserResponse> toggleUserStatus(@PathVariable Long id) {
         return ResponseEntity.ok(adminService.toggleUserStatus(id));
     }
 
     @GetMapping("/jobs")
-    public ResponseEntity<List<JobOffer>> getAllJobs() {
+    public ResponseEntity<List<com.erecruitment.backend.job.dto.JobOfferResponse>> getAllJobs() {
         return ResponseEntity.ok(adminService.getAllJobOffers());
     }
 

@@ -18,4 +18,10 @@ public class UserController {
         String email = authentication.getName();
         return userService.getUserByEmail(email);
     }
+
+    @PutMapping("/profile")
+    public UserResponse updateProfile(Authentication authentication, @RequestBody com.erecruitment.backend.user.dto.UpdateProfileRequest request) {
+        String email = authentication.getName();
+        return userService.updateProfile(email, request);
+    }
 }

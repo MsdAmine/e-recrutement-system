@@ -42,19 +42,19 @@ const JobSupervision: React.FC = () => {
   if (loading) return <div className="p-8 text-center">Loading job offers...</div>;
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-8 animate-in">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Supervise Job Offers</h1>
-          <p className="text-slate-500 mt-2">Monitor and remove non-compliant job postings.</p>
+          <h1 className="text-3xl font-bold text-foreground">Supervise Job Offers</h1>
+          <p className="text-muted-foreground mt-2">Monitor and remove non-compliant job postings.</p>
         </div>
         
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
           <input
             type="text"
             placeholder="Search jobs..."
-            className="pl-10 pr-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-64"
+            className="pl-10 pr-4 py-2 bg-card border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 w-full md:w-64"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -64,31 +64,31 @@ const JobSupervision: React.FC = () => {
       {filteredJobs.length > 0 ? (
         <div className="grid grid-cols-1 gap-6">
           {filteredJobs.map((job) => (
-            <div key={job.id} className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-col md:flex-row justify-between gap-6 hover:border-blue-200 transition-all">
+            <div key={job.id} className="surface-card p-6 flex flex-col md:flex-row justify-between gap-6 surface-card-hover">
               <div className="flex-1 space-y-4">
                 <div className="flex items-start justify-between">
                   <div>
-                    <h3 className="text-xl font-bold text-slate-900">{job.title}</h3>
-                    <p className="text-sm text-blue-600 font-medium">By {job.recruiterEmail}</p>
+                    <h3 className="text-xl font-bold text-foreground">{job.title}</h3>
+                    <p className="text-sm text-primary font-semibold">By {job.recruiterEmail}</p>
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${job.active ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-600"}`}>
+                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${job.active ? "bg-success/10 text-success" : "bg-muted text-muted-foreground"}`}>
                     {job.active ? "Active" : "Inactive"}
                   </span>
                 </div>
                 
-                <p className="text-slate-600 line-clamp-2 text-sm">{job.description}</p>
+                <p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed">{job.description}</p>
                 
-                <div className="flex flex-wrap gap-4 text-sm text-slate-500">
-                  <div className="flex items-center"><MapPin className="w-4 h-4 mr-1 text-slate-400" /> {job.location}</div>
-                  <div className="flex items-center"><Briefcase className="w-4 h-4 mr-1 text-slate-400" /> {job.contractType}</div>
-                  <div className="flex items-center"><Calendar className="w-4 h-4 mr-1 text-slate-400" /> {new Date(job.createdAt).toLocaleDateString()}</div>
+                <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                  <div className="flex items-center"><MapPin className="w-4 h-4 mr-1.5 opacity-70" /> {job.location}</div>
+                  <div className="flex items-center"><Briefcase className="w-4 h-4 mr-1.5 opacity-70" /> {job.contractType}</div>
+                  <div className="flex items-center"><Calendar className="w-4 h-4 mr-1.5 opacity-70" /> {new Date(job.createdAt).toLocaleDateString()}</div>
                 </div>
               </div>
 
               <div className="flex md:flex-col justify-end gap-3">
                 <button
                   onClick={() => handleDeleteJob(job.id)}
-                  className="flex items-center justify-center p-3 rounded-2xl bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+                  className="flex items-center justify-center p-3 rounded-2xl bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors"
                   title="Delete non-compliant content"
                 >
                   <Trash2 className="w-5 h-5" />
@@ -99,10 +99,10 @@ const JobSupervision: React.FC = () => {
           ))}
         </div>
       ) : (
-        <div className="bg-slate-50 p-12 rounded-3xl text-center border-2 border-dashed border-slate-200">
-          <AlertCircle className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-slate-900">No job offers found</h3>
-          <p className="text-slate-500">Try adjusting your search filters.</p>
+        <div className="bg-muted/30 p-12 rounded-2xl text-center border-2 border-dashed border-border">
+          <AlertCircle className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-foreground">No job offers found</h3>
+          <p className="text-muted-foreground">Try adjusting your search filters.</p>
         </div>
       )}
     </div>

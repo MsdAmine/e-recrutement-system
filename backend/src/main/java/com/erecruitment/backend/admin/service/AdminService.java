@@ -4,8 +4,10 @@ import com.erecruitment.backend.admin.dto.PlatformStatsResponse;
 import com.erecruitment.backend.application.repository.JobApplicationRepository;
 import com.erecruitment.backend.common.enums.RoleName;
 import com.erecruitment.backend.common.exception.ResourceNotFoundException;
+import com.erecruitment.backend.job.dto.JobOfferResponse;
 import com.erecruitment.backend.job.entity.JobOffer;
 import com.erecruitment.backend.job.repository.JobOfferRepository;
+import com.erecruitment.backend.user.dto.UserResponse;
 import com.erecruitment.backend.user.entity.User;
 import com.erecruitment.backend.user.repository.RoleRepository;
 import com.erecruitment.backend.user.repository.UserRepository;
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,20 +28,51 @@ public class AdminService {
     private final JobOfferRepository jobOfferRepository;
     private final JobApplicationRepository jobApplicationRepository;
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponse> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(this::mapToUserResponse)
+                .collect(Collectors.toList());
     }
 
     @Transactional
-    public User toggleUserStatus(Long userId) {
+    public UserResponse toggleUserStatus(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         user.setEnabled(!user.isEnabled());
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        return mapToUserResponse(savedUser);
     }
 
-    public List<JobOffer> getAllJobOffers() {
-        return jobOfferRepository.findAll();
+    private UserResponse mapToUserResponse(User user) {
+        return UserResponse.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .role(user.getRole().getName().name())
+                .enabled(user.isEnabled())
+                .build();
+    }
+
+    public List<JobOfferResponse> getAllJobOffers() {
+        return jobOfferRepository.findAll().stream()
+                .map(this::mapToJobResponse)
+                .collect(Collectors.toList());
+    }
+
+    private JobOfferResponse mapToJobResponse(JobOffer jobOffer) {
+        return JobOfferResponse.builder()
+                .id(jobOffer.getId())
+                .title(jobOffer.getTitle())
+                .description(jobOffer.getDescription())
+                .contractType(jobOffer.getContractType())
+                .location(jobOffer.getLocation())
+                .salary(jobOffer.getSalary())
+                .active(jobOffer.isActive())
+                .createdAt(jobOffer.getCreatedAt())
+                .recruiterId(jobOffer.getRecruiter().getId())
+                .recruiterEmail(jobOffer.getRecruiter().getEmail())
+                .build();
     }
 
     @Transactional

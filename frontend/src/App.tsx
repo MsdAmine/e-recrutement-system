@@ -25,6 +25,7 @@ import { JobOfferApplicationsPage } from "@/pages/recruiter/JobOfferApplications
 import AdminDashboard from "@/pages/admin/AdminDashboard";
 import UserManagement from "@/pages/admin/UserManagement";
 import JobSupervision from "@/pages/admin/JobSupervision";
+import AdminProfilePage from "@/pages/admin/AdminProfilePage";
 
 function App() {
   return (
@@ -77,6 +78,7 @@ function App() {
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/users" element={<UserManagement />} />
           <Route path="/admin/jobs" element={<JobSupervision />} />
+          <Route path="/admin/profile" element={<AdminProfilePage />} />
         </Route>
       </Route>
 

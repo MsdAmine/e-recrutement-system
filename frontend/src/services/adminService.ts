@@ -25,6 +25,11 @@ const adminService = {
   deleteJob: async (jobId: number): Promise<void> => {
     await apiClient.delete(`/admin/jobs/${jobId}`);
   },
+
+  updateProfile: async (data: any): Promise<User> => {
+    const response = await apiClient.put("/users/profile", data);
+    return response.data;
+  },
 };
 
 export default adminService;

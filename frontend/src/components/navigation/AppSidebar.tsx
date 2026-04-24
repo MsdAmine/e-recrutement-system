@@ -42,6 +42,7 @@ const adminNav: NavItem[] = [
   { label: "Dashboard", href: "/admin/dashboard", icon: <LayoutDashboardIcon className="h-4 w-4" /> },
   { label: "Manage Users", href: "/admin/users", icon: <UserIcon className="h-4 w-4" /> },
   { label: "Supervise Jobs", href: "/admin/jobs", icon: <BriefcaseIcon className="h-4 w-4" /> },
+  { label: "Edit Profile", href: "/admin/profile", icon: <UserIcon className="h-4 w-4" /> },
 ];
 
 interface AppSidebarProps {
