@@ -35,6 +35,15 @@ const schema = z.object({
         !value || (!Number.isNaN(Number(value)) && Number(value) > 0),
       "Must be a positive number"
     ),
+  requiredSkills: z.string().max(1000, "Skills text too long").optional(),
+  requiredExperienceYears: z
+    .string()
+    .optional()
+    .refine(
+      (value) =>
+        !value || (Number.isInteger(Number(value)) && Number(value) >= 0),
+      "Must be a non-negative whole number"
+    ),
   active: z.boolean(),
 });
 
@@ -65,6 +74,8 @@ export function EditJobOfferPage() {
         contractType: offer.contractType,
         location: offer.location,
         salary: offer.salary?.toString() ?? "",
+        requiredSkills: offer.requiredSkills ?? "",
+        requiredExperienceYears: offer.requiredExperienceYears?.toString() ?? "",
         active: offer.active,
       });
     }
@@ -78,6 +89,10 @@ export function EditJobOfferPage() {
         contractType: vals.contractType,
         location: vals.location,
         salary: vals.salary ? Number(vals.salary) : null,
+        requiredSkills: vals.requiredSkills?.trim() || null,
+        requiredExperienceYears: vals.requiredExperienceYears
+          ? Number(vals.requiredExperienceYears)
+          : null,
         active: vals.active,
       }),
     onSuccess: () => {
@@ -178,6 +193,15 @@ export function EditJobOfferPage() {
           <FormField label="Monthly Salary (MAD)" error={errors.salary?.message}>
             <Input id="edit-job-salary" type="number" {...register("salary")} />
           </FormField>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormField label="Required Skills (comma-separated)" error={errors.requiredSkills?.message}>
+              <Input id="edit-job-required-skills" placeholder="Java, Spring Boot, PostgreSQL" {...register("requiredSkills")} />
+            </FormField>
+            <FormField label="Required Experience (years)" error={errors.requiredExperienceYears?.message}>
+              <Input id="edit-job-required-exp" type="number" min="0" {...register("requiredExperienceYears")} />
+            </FormField>
+          </div>
 
           <FormField label="Job Description" error={errors.description?.message} required>
             <Textarea id="edit-job-description" className="min-h-[160px]" {...register("description")} />

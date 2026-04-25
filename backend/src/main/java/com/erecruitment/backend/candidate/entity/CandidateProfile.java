@@ -4,6 +4,8 @@ import com.erecruitment.backend.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "candidate_profiles")
 @Getter
@@ -35,4 +37,18 @@ public class CandidateProfile {
 
     @Column(length = 255)
     private String cvUrl;
+
+    @Column(columnDefinition = "TEXT")
+    private String skills;
+
+    private Integer yearsOfExperience;
+
+    @Column(precision = 12, scale = 2)
+    private BigDecimal expectedSalary;
+
+    @Column(length = 100)
+    private String preferredContractType;
+
+    @Column(length = 255)
+    private String preferredLocation;
 }

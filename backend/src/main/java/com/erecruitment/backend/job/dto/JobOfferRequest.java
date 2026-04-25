@@ -13,6 +13,8 @@ public record JobOfferRequest(
         @NotBlank String contractType,
         @NotBlank String location,
         BigDecimal salary,
+        String requiredSkills,
+        Integer requiredExperienceYears,
         @NotNull Boolean active
 ) {
 }

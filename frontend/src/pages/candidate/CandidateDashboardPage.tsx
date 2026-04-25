@@ -31,9 +31,24 @@ export function CandidateDashboardPage() {
     queryFn: candidateService.getProfile,
   });
 
-  const profileCompleteness = profile
-    ? [profile.phone, profile.address, profile.headline, profile.summary, profile.cvUrl].filter(Boolean).length * 20
-    : 0;
+  const profileFields = profile
+    ? [
+        profile.phone,
+        profile.address,
+        profile.headline,
+        profile.summary,
+        profile.cvUrl,
+        profile.skills,
+        profile.yearsOfExperience,
+        profile.expectedSalary,
+        profile.preferredContractType,
+        profile.preferredLocation,
+      ]
+    : [];
+  const completedFields = profileFields.filter(
+    (value) => value !== null && value !== undefined && `${value}`.trim() !== ""
+  ).length;
+  const profileCompleteness = profile ? Math.round((completedFields / 10) * 100) : 0;
 
   return (
     <div className="max-w-5xl mx-auto animate-in">
@@ -108,7 +123,7 @@ export function CandidateDashboardPage() {
           </div>
           <div className="flex items-end justify-between mb-2">
             <span className="text-3xl font-bold tracking-tight">{profileCompleteness}%</span>
-            <span className="text-xs text-muted-foreground">of 5 fields</span>
+            <span className="text-xs text-muted-foreground">of 10 fields</span>
           </div>
           <Progress value={profileCompleteness} className="mb-4" />
           <p className="text-xs text-muted-foreground mb-4">

@@ -27,6 +27,15 @@ const schema = z.object({
         !value || (!Number.isNaN(Number(value)) && Number(value) > 0),
       "Must be a positive number"
     ),
+  requiredSkills: z.string().max(1000, "Skills text too long").optional(),
+  requiredExperienceYears: z
+    .string()
+    .optional()
+    .refine(
+      (value) =>
+        !value || (Number.isInteger(Number(value)) && Number(value) >= 0),
+      "Must be a non-negative whole number"
+    ),
   active: z.boolean(),
 });
 
@@ -49,6 +58,10 @@ export function CreateJobOfferPage() {
         contractType: values.contractType,
         location: values.location,
         salary: values.salary ? Number(values.salary) : null,
+        requiredSkills: values.requiredSkills?.trim() || null,
+        requiredExperienceYears: values.requiredExperienceYears
+          ? Number(values.requiredExperienceYears)
+          : null,
         active: values.active,
       }),
     onSuccess: () => {
@@ -104,6 +117,15 @@ export function CreateJobOfferPage() {
           <FormField label="Monthly Salary (MAD)" error={errors.salary?.message} description="Leave blank if not specified">
             <Input id="create-job-salary" type="number" placeholder="e.g. 12000" {...register("salary")} />
           </FormField>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormField label="Required Skills (comma-separated)" error={errors.requiredSkills?.message}>
+              <Input id="create-job-required-skills" placeholder="Java, Spring Boot, PostgreSQL" {...register("requiredSkills")} />
+            </FormField>
+            <FormField label="Required Experience (years)" error={errors.requiredExperienceYears?.message}>
+              <Input id="create-job-required-exp" type="number" min="0" placeholder="e.g. 3" {...register("requiredExperienceYears")} />
+            </FormField>
+          </div>
 
           <FormField label="Job Description" error={errors.description?.message} required>
             <Textarea

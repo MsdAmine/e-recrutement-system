@@ -7,6 +7,11 @@ export interface UpdateCandidateProfilePayload {
   headline?: string;
   summary?: string;
   cvUrl?: string;
+  skills?: string;
+  yearsOfExperience?: number;
+  expectedSalary?: number;
+  preferredContractType?: "CDI" | "CDD" | "STAGE" | "FREELANCE" | "INTERIM";
+  preferredLocation?: string;
 }
 
 export const candidateService = {

@@ -1,6 +1,9 @@
 // Centralised TanStack Query key factory
 // Use these throughout the app for cache consistency
 
+const recruiterApplicationsRoot = ["recruiterApplications"] as const;
+const jobOfferApplicationsRoot = ["jobOfferApplications"] as const;
+
 export const queryKeys = {
   // Auth
   currentUser: ["currentUser"] as const,
@@ -8,6 +11,8 @@ export const queryKeys = {
   // Candidate
   candidateProfile: ["candidateProfile"] as const,
   candidateDashboard: ["candidateDashboard"] as const,
+  candidateMatches: ["candidateMatches"] as const,
+  candidateMatchByJob: (jobId: number) => ["candidateMatchByJob", jobId] as const,
 
   // Recruiter
   recruiterProfile: ["recruiterProfile"] as const,
@@ -24,13 +29,15 @@ export const queryKeys = {
   myApplications: (page: number, size: number) =>
     ["myApplications", page, size] as const,
   myApplication: (id: number) => ["myApplication", id] as const,
+  recruiterApplicationsRoot,
   recruiterApplications: (
     page: number,
     size: number,
     status?: string
-  ) => ["recruiterApplications", page, size, status] as const,
+  ) => [...recruiterApplicationsRoot, page, size, status] as const,
+  jobOfferApplicationsRoot,
   jobOfferApplications: (jobOfferId: number, page: number, size: number) =>
-    ["jobOfferApplications", jobOfferId, page, size] as const,
+    [...jobOfferApplicationsRoot, jobOfferId, page, size] as const,
 
   // Notifications
   notifications: (page: number, size: number) =>

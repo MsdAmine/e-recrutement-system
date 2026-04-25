@@ -8,11 +8,15 @@ import { queryKeys } from "@/lib/queryKeys";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FormField, PageHeader, Skeleton } from "@/components/shared/SharedComponents";
 import { ArrowLeftIcon, SaveIcon } from "lucide-react";
 import { useEffect } from "react";
 import { AxiosError } from "axios";
 import { ApiError } from "@/types";
+import { Controller } from "react-hook-form";
+
+const CONTRACT_TYPES = ["CDI", "CDD", "STAGE", "FREELANCE", "INTERIM"] as const;
 
 const schema = z.object({
   phone: z.string().optional(),
@@ -20,6 +24,25 @@ const schema = z.object({
   headline: z.string().max(120, "Headline too long").optional(),
   summary: z.string().max(1000, "Summary too long").optional(),
   cvUrl: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  skills: z.string().max(1000, "Skills text too long").optional(),
+  yearsOfExperience: z
+    .string()
+    .optional()
+    .refine(
+      (value) =>
+        !value || (Number.isInteger(Number(value)) && Number(value) >= 0),
+      "Must be a non-negative whole number"
+    ),
+  expectedSalary: z
+    .string()
+    .optional()
+    .refine(
+      (value) =>
+        !value || (!Number.isNaN(Number(value)) && Number(value) >= 0),
+      "Must be a non-negative number"
+    ),
+  preferredContractType: z.enum(CONTRACT_TYPES).optional().or(z.literal("")),
+  preferredLocation: z.string().max(255, "Preferred location too long").optional(),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -27,6 +50,13 @@ type FormValues = z.infer<typeof schema>;
 function normalizeOptional(value?: string) {
   const trimmed = value?.trim();
   return trimmed ? trimmed : undefined;
+}
+
+function parseOptionalNumber(value?: string) {
+  const trimmed = value?.trim();
+  if (!trimmed) return undefined;
+  const parsed = Number(trimmed);
+  return Number.isNaN(parsed) ? undefined : parsed;
 }
 
 export function EditCandidateProfilePage() {
@@ -38,7 +68,7 @@ export function EditCandidateProfilePage() {
     queryFn: candidateService.getProfile,
   });
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormValues>({
+  const { register, control, handleSubmit, reset, formState: { errors } } = useForm<FormValues>({
     resolver: zodResolver(schema),
   });
 
@@ -50,6 +80,11 @@ export function EditCandidateProfilePage() {
         headline: profile.headline ?? "",
         summary: profile.summary ?? "",
         cvUrl: profile.cvUrl ?? "",
+        skills: profile.skills ?? "",
+        yearsOfExperience: profile.yearsOfExperience?.toString() ?? "",
+        expectedSalary: profile.expectedSalary?.toString() ?? "",
+        preferredContractType: profile.preferredContractType ?? "",
+        preferredLocation: profile.preferredLocation ?? "",
       });
     }
   }, [profile, reset]);
@@ -62,6 +97,11 @@ export function EditCandidateProfilePage() {
         headline: normalizeOptional(values.headline),
         summary: normalizeOptional(values.summary),
         cvUrl: normalizeOptional(values.cvUrl),
+        skills: normalizeOptional(values.skills),
+        yearsOfExperience: parseOptionalNumber(values.yearsOfExperience),
+        expectedSalary: parseOptionalNumber(values.expectedSalary),
+        preferredContractType: normalizeOptional(values.preferredContractType),
+        preferredLocation: normalizeOptional(values.preferredLocation),
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.candidateProfile });
@@ -121,6 +161,50 @@ export function EditCandidateProfilePage() {
               {...register("summary")}
             />
           </FormField>
+
+          <FormField label="Skills (comma-separated)" error={errors.skills?.message} description="Example: Java, Spring Boot, PostgreSQL">
+            <Textarea
+              id="edit-c-skills"
+              placeholder="Java, Spring Boot, PostgreSQL"
+              className="min-h-[90px]"
+              {...register("skills")}
+            />
+          </FormField>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormField label="Years of Experience" error={errors.yearsOfExperience?.message}>
+              <Input id="edit-c-experience" type="number" min="0" {...register("yearsOfExperience")} />
+            </FormField>
+            <FormField label="Expected Salary (MAD)" error={errors.expectedSalary?.message}>
+              <Input id="edit-c-expected-salary" type="number" min="0" {...register("expectedSalary")} />
+            </FormField>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormField label="Preferred Contract Type" error={errors.preferredContractType?.message}>
+              <Controller
+                name="preferredContractType"
+                control={control}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger id="edit-c-contract">
+                      <SelectValue placeholder="No preference" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="CDI">Permanent (CDI)</SelectItem>
+                      <SelectItem value="CDD">Fixed-term (CDD)</SelectItem>
+                      <SelectItem value="STAGE">Internship</SelectItem>
+                      <SelectItem value="FREELANCE">Freelance</SelectItem>
+                      <SelectItem value="INTERIM">Temporary</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </FormField>
+            <FormField label="Preferred Location" error={errors.preferredLocation?.message}>
+              <Input id="edit-c-preferred-location" placeholder="e.g. Casablanca, Morocco" {...register("preferredLocation")} />
+            </FormField>
+          </div>
 
           {mutation.isError && (
             <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2.5 text-sm text-destructive">

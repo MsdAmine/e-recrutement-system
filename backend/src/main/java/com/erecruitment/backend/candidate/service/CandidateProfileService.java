@@ -1,20 +1,18 @@
 package com.erecruitment.backend.candidate.service;
 
-import com.erecruitment.backend.application.dto.JobApplicationResponse;
 import com.erecruitment.backend.candidate.dto.CandidateProfileResponse;
+import com.erecruitment.backend.candidate.dto.CandidateDashboardResponse;
 import com.erecruitment.backend.candidate.dto.UpdateCandidateProfileRequest;
 import com.erecruitment.backend.candidate.entity.CandidateProfile;
 import com.erecruitment.backend.candidate.repository.CandidateProfileRepository;
+import com.erecruitment.backend.application.repository.JobApplicationRepository;
+import com.erecruitment.backend.common.enums.ApplicationStatus;
 import com.erecruitment.backend.common.exception.ResourceNotFoundException;
 import com.erecruitment.backend.user.entity.User;
 import com.erecruitment.backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
-import com.erecruitment.backend.application.repository.JobApplicationRepository;
-import com.erecruitment.backend.candidate.dto.CandidateDashboardResponse;
-import com.erecruitment.backend.common.enums.ApplicationStatus;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +32,7 @@ public class CandidateProfileService {
         return mapToResponse(profile);
     }
 
+    @CacheEvict(value = {"candidateMatches", "candidateJobMatches", "candidateEmbeddings"}, allEntries = true)
     public CandidateProfileResponse updateMyProfile(String email, UpdateCandidateProfileRequest request) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
@@ -46,6 +45,11 @@ public class CandidateProfileService {
         profile.setHeadline(request.headline());
         profile.setSummary(request.summary());
         profile.setCvUrl(request.cvUrl());
+        profile.setSkills(request.skills());
+        profile.setYearsOfExperience(request.yearsOfExperience());
+        profile.setExpectedSalary(request.expectedSalary());
+        profile.setPreferredContractType(request.preferredContractType());
+        profile.setPreferredLocation(request.preferredLocation());
 
         candidateProfileRepository.save(profile);
         return mapToResponse(profile);
@@ -62,6 +66,11 @@ public class CandidateProfileService {
                 .headline(profile.getHeadline())
                 .summary(profile.getSummary())
                 .cvUrl(profile.getCvUrl())
+                .skills(profile.getSkills())
+                .yearsOfExperience(profile.getYearsOfExperience())
+                .expectedSalary(profile.getExpectedSalary())
+                .preferredContractType(profile.getPreferredContractType())
+                .preferredLocation(profile.getPreferredLocation())
                 .build();
     }
 

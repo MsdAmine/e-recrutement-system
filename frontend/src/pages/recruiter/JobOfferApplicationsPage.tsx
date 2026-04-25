@@ -32,6 +32,11 @@ export function JobOfferApplicationsPage() {
   const offerId = Number(jobOfferId);
   const [page, setPage] = useState(0);
   const queryClient = useQueryClient();
+  const jobOfferApplicationsQueryKey = queryKeys.jobOfferApplications(
+    offerId,
+    page,
+    PAGE_SIZE
+  );
 
   const { data: offer } = useQuery({
     queryKey: queryKeys.jobOffer(offerId),
@@ -40,7 +45,7 @@ export function JobOfferApplicationsPage() {
   });
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: queryKeys.jobOfferApplications(offerId, page, PAGE_SIZE),
+    queryKey: jobOfferApplicationsQueryKey,
     queryFn: () =>
       applicationService.getJobOfferApplications(offerId, page, PAGE_SIZE),
     enabled: !!offerId,
@@ -49,30 +54,48 @@ export function JobOfferApplicationsPage() {
   const statusMutation = useMutation({
     mutationFn: ({ appId, status }: { appId: number; status: ApplicationStatus }) =>
       applicationService.updateStatus(appId, { status }),
-    onSuccess: (updatedApplication) => {
+    onSuccess: (updatedApplication, variables) => {
+      const nextStatus = updatedApplication.status ?? variables.status;
+
       const patchStatus = (oldPage: Page<Application> | undefined) => {
         if (!oldPage) return oldPage;
+        if (!oldPage.content.some((app) => app.id === updatedApplication.id)) {
+          return oldPage;
+        }
+
         return {
           ...oldPage,
           content: oldPage.content.map((app) =>
             app.id === updatedApplication.id
-              ? { ...app, status: updatedApplication.status }
+              ? { ...app, status: nextStatus }
               : app
           ),
         };
       };
 
-      queryClient.setQueriesData<Page<Application>>(
-        { queryKey: ["jobOfferApplications"] },
+      queryClient.setQueryData<Page<Application>>(
+        jobOfferApplicationsQueryKey,
         patchStatus
       );
       queryClient.setQueriesData<Page<Application>>(
-        { queryKey: ["recruiterApplications"] },
+        { queryKey: queryKeys.jobOfferApplicationsRoot, exact: false },
+        patchStatus
+      );
+      queryClient.setQueriesData<Page<Application>>(
+        { queryKey: queryKeys.recruiterApplicationsRoot, exact: false },
         patchStatus
       );
 
-      queryClient.invalidateQueries({ queryKey: ["jobOfferApplications"] });
-      queryClient.invalidateQueries({ queryKey: ["recruiterApplications"] });
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.jobOfferApplicationsRoot,
+        exact: false,
+        refetchType: "active",
+      });
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.recruiterApplicationsRoot,
+        exact: false,
+        refetchType: "active",
+      });
     },
   });
 
