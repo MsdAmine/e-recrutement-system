@@ -12,17 +12,26 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ArrowLeftIcon, CalendarIcon, BriefcaseIcon, AlignLeftIcon } from "lucide-react";
 
+/**
+ * ApplicationDetailPage Component
+ * 
+ * Displays the full details of a specific job application submitted by a candidate.
+ * Includes job title, current status, application date, and the submitted cover letter.
+ */
 export function ApplicationDetailPage() {
+  // Extract application ID from the URL path parameters
   const { applicationId } = useParams<{ applicationId: string }>();
   const appId = Number(applicationId);
   const isValidAppId = Number.isInteger(appId) && appId > 0;
 
+  // React Query hook for fetching application details by ID
   const { data: app, isLoading, isError, error, refetch } = useQuery({
     queryKey: queryKeys.myApplication(appId),
     queryFn: () => applicationService.getMyApplicationById(appId),
-    enabled: isValidAppId,
+    enabled: isValidAppId, // Only fetch if we have a valid ID
   });
 
+  // Loading state: Display skeleton loaders while fetching data
   if (isLoading) {
     return (
       <div className="max-w-2xl mx-auto space-y-4 animate-in">
@@ -32,6 +41,7 @@ export function ApplicationDetailPage() {
     );
   }
 
+  // Validation state: Handle case where ID in URL is non-numeric or non-positive
   if (!isValidAppId) {
     return (
       <div className="max-w-2xl mx-auto text-center py-12 animate-in">
@@ -43,6 +53,7 @@ export function ApplicationDetailPage() {
     );
   }
 
+  // Error state: Display descriptive error messages if the API call fails
   if (isError) {
     const loadErrorMessage =
       error instanceof AxiosError
@@ -62,6 +73,7 @@ export function ApplicationDetailPage() {
     );
   }
 
+  // Empty state: Handle case where application ID is valid but no data returned
   if (!app) {
     return (
       <div className="max-w-2xl mx-auto text-center py-12 animate-in">
@@ -75,6 +87,7 @@ export function ApplicationDetailPage() {
 
   return (
     <div className="max-w-2xl mx-auto animate-in">
+      {/* Navigation: Back link */}
       <Button variant="ghost" size="sm" className="mb-5 -ml-2" asChild>
         <Link to="/candidate/applications">
           <ArrowLeftIcon className="h-4 w-4" />
@@ -85,11 +98,11 @@ export function ApplicationDetailPage() {
       <PageHeader title="Application Detail" />
 
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="space-y-4"
-      >
-        {/* Header card */}
+         initial={{ opacity: 0, y: 16 }}
+         animate={{ opacity: 1, y: 0 }}
+         className="space-y-4"
+       >
+        {/* Main Application Card: Job Info & Status */}
         <div className="rounded-xl border border-border bg-card p-6">
           <div className="flex items-start justify-between gap-4 mb-4">
             <div>
@@ -101,6 +114,7 @@ export function ApplicationDetailPage() {
 
           <Separator className="mb-4" />
 
+          {/* Quick details grid (Date & Status label) */}
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div className="flex items-center gap-2 text-muted-foreground">
               <CalendarIcon className="h-4 w-4" />
@@ -119,7 +133,7 @@ export function ApplicationDetailPage() {
           </div>
         </div>
 
-        {/* Cover letter */}
+        {/* Content Section: Cover Letter Display */}
         <div className="rounded-xl border border-border bg-card p-6">
           <div className="flex items-center gap-2 mb-3">
             <AlignLeftIcon className="h-4 w-4 text-muted-foreground" />
@@ -130,7 +144,7 @@ export function ApplicationDetailPage() {
           </p>
         </div>
 
-        {/* View job link */}
+        {/* Footer Actions: Jump to original Job Posting */}
         <Button variant="outline" size="sm" asChild>
           <Link to={`/candidate/jobs/${app.jobOfferId}`}>
             <BriefcaseIcon className="h-4 w-4" />
@@ -141,3 +155,4 @@ export function ApplicationDetailPage() {
     </div>
   );
 }
+

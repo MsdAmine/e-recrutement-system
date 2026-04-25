@@ -38,6 +38,13 @@ const recruiterNav: NavItem[] = [
   { label: "Notifications", href: "/recruiter/notifications", icon: <BellIcon className="h-4 w-4" /> },
 ];
 
+const adminNav: NavItem[] = [
+  { label: "Dashboard", href: "/admin/dashboard", icon: <LayoutDashboardIcon className="h-4 w-4" /> },
+  { label: "Manage Users", href: "/admin/users", icon: <UserIcon className="h-4 w-4" /> },
+  { label: "Supervise Jobs", href: "/admin/jobs", icon: <BriefcaseIcon className="h-4 w-4" /> },
+  { label: "Edit Profile", href: "/admin/profile", icon: <UserIcon className="h-4 w-4" /> },
+];
+
 interface AppSidebarProps {
   className?: string;
   onNavigate?: () => void;
@@ -49,7 +56,9 @@ export function AppSidebar({ className, onNavigate }: AppSidebarProps) {
   const navigate = useNavigate();
 
   const isRecruiter = user?.role === "ROLE_RECRUITER";
-  const navItems = isRecruiter ? recruiterNav : candidateNav;
+  const isAdmin = user?.role === "ROLE_ADMIN";
+  
+  const navItems = isAdmin ? adminNav : (isRecruiter ? recruiterNav : candidateNav);
 
   const handleLogout = () => {
     logout();
@@ -104,7 +113,7 @@ export function AppSidebar({ className, onNavigate }: AppSidebarProps) {
       {/* User footer */}
       <div className="p-3">
         <Link
-          to={isRecruiter ? "/recruiter/profile" : "/candidate/profile"}
+          to={isAdmin ? "/admin/dashboard" : (isRecruiter ? "/recruiter/profile" : "/candidate/profile")}
           onClick={onNavigate}
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-accent transition-colors group"
         >

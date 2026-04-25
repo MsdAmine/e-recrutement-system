@@ -22,6 +22,10 @@ import { CreateJobOfferPage } from "@/pages/recruiter/CreateJobOfferPage";
 import { EditJobOfferPage } from "@/pages/recruiter/EditJobOfferPage";
 import { RecruiterApplicationsPage } from "@/pages/recruiter/RecruiterApplicationsPage";
 import { JobOfferApplicationsPage } from "@/pages/recruiter/JobOfferApplicationsPage";
+import AdminDashboard from "@/pages/admin/AdminDashboard";
+import UserManagement from "@/pages/admin/UserManagement";
+import JobSupervision from "@/pages/admin/JobSupervision";
+import AdminProfilePage from "@/pages/admin/AdminProfilePage";
 
 function App() {
   return (
@@ -66,6 +70,15 @@ function App() {
             element={<JobOfferApplicationsPage />}
           />
           <Route path="/recruiter/notifications" element={<NotificationsPage />} />
+        </Route>
+      </Route>
+      <Route element={<ProtectedRoute allowedRoles={["ROLE_ADMIN"]} />}>
+        <Route element={<AppLayout />}>
+          <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/users" element={<UserManagement />} />
+          <Route path="/admin/jobs" element={<JobSupervision />} />
+          <Route path="/admin/profile" element={<AdminProfilePage />} />
         </Route>
       </Route>
 
