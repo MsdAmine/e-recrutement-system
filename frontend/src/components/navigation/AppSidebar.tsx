@@ -57,7 +57,7 @@ export function AppSidebar({ className, onNavigate }: AppSidebarProps) {
 
   const isRecruiter = user?.role === "ROLE_RECRUITER";
   const isAdmin = user?.role === "ROLE_ADMIN";
-  
+
   const navItems = isAdmin ? adminNav : (isRecruiter ? recruiterNav : candidateNav);
 
   const handleLogout = () => {
@@ -73,7 +73,6 @@ export function AppSidebar({ className, onNavigate }: AppSidebarProps) {
         className ?? "hidden lg:flex sticky top-0"
       )}
     >
-      {/* Logo */}
       <div className="flex h-16 items-center gap-2.5 px-5 border-b border-border">
         <Link to="/" onClick={onNavigate} className="flex items-center gap-2.5 group">
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
@@ -83,11 +82,28 @@ export function AppSidebar({ className, onNavigate }: AppSidebarProps) {
         </Link>
       </div>
 
-      {/* Nav */}
       <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-0.5">
         {navItems.map((item) => {
-          const isActive = location.pathname === item.href ||
-            location.pathname.startsWith(`${item.href}/`);
+          // --- THE FIX ---
+          // We check if the current path is an exact match.
+          // If it's NOT an exact match, we only allow "active" if the item 
+          // is NOT the parent of another specific nav item.
+          const isExact = location.pathname === item.href;
+
+          // Logic: Highlight if it's an exact match OR if it's a sub-route 
+          // UNLESS the path is specifically the "new" job page while we are looking at the general list.
+          let isActive = isExact;
+
+          if (!isExact && location.pathname.startsWith(`${item.href}/`)) {
+            // If we are on /recruiter/job-offers/new, don't let /recruiter/job-offers catch it
+            // because "Post a Job" has its own specific entry.
+            if (item.href === "/recruiter/job-offers" && location.pathname === "/recruiter/job-offers/new") {
+              isActive = false;
+            } else {
+              isActive = true;
+            }
+          }
+
           return (
             <Link
               key={item.href}
@@ -110,7 +126,6 @@ export function AppSidebar({ className, onNavigate }: AppSidebarProps) {
 
       <Separator />
 
-      {/* User footer */}
       <div className="p-3">
         <Link
           to={isAdmin ? "/admin/dashboard" : (isRecruiter ? "/recruiter/profile" : "/candidate/profile")}
