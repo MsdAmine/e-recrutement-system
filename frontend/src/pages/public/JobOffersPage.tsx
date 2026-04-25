@@ -57,7 +57,6 @@ export function JobOffersPage() {
   const publicOffersQuery = useQuery({
     queryKey: queryKeys.jobOffers(page, PAGE_SIZE),
     queryFn: () => jobOfferService.getPublicOffers(page, PAGE_SIZE),
-    enabled: !isCandidateView,
   });
 
   const candidateMatchesQuery = useQuery({
@@ -66,28 +65,22 @@ export function JobOffersPage() {
     enabled: isCandidateView,
   });
 
-  const publicCards: JobCard[] = (publicOffersQuery.data?.content ?? []).map((offer) => ({
-    id: offer.id,
-    title: offer.title,
-    description: offer.description,
-    contractType: offer.contractType,
-    location: offer.location,
-    salary: offer.salary,
-    recruiterEmail: offer.recruiterEmail,
-    createdAt: offer.createdAt,
-  }));
+  const publicCards: JobCard[] = (publicOffersQuery.data?.content ?? []).map((offer) => {
+    const match = isCandidateView ? candidateMatchesQuery.data?.find(m => m.jobId === offer.id) : undefined;
+    return {
+      id: offer.id,
+      title: offer.title,
+      description: offer.description,
+      contractType: offer.contractType,
+      location: offer.location,
+      salary: offer.salary,
+      recruiterEmail: offer.recruiterEmail,
+      createdAt: offer.createdAt,
+      match: match,
+    };
+  });
 
-  const candidateCards: JobCard[] = (candidateMatchesQuery.data ?? []).map((match) => ({
-    id: match.jobId,
-    title: match.title,
-    description: match.description,
-    contractType: match.contractType,
-    location: match.location,
-    salary: match.salary,
-    match,
-  }));
-
-  const allCards = isCandidateView ? candidateCards : publicCards;
+  const allCards = publicCards;
   const filtered = allCards.filter(
     (offer) =>
       search.trim() === "" ||
@@ -95,16 +88,12 @@ export function JobOffersPage() {
       offer.location.toLowerCase().includes(search.toLowerCase())
   );
 
-  const paginatedCards = isCandidateView
-    ? filtered.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE)
-    : filtered;
+  const paginatedCards = filtered;
 
-  const totalPages = isCandidateView
-    ? Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
-    : (publicOffersQuery.data?.totalPages ?? 1);
+  const totalPages = publicOffersQuery.data?.totalPages ?? 1;
 
-  const isLoading = isCandidateView ? candidateMatchesQuery.isLoading : publicOffersQuery.isLoading;
-  const isError = isCandidateView ? candidateMatchesQuery.isError : publicOffersQuery.isError;
+  const isLoading = publicOffersQuery.isLoading;
+  const isError = publicOffersQuery.isError;
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
@@ -118,7 +107,7 @@ export function JobOffersPage() {
         </h1>
         <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
           {isCandidateView
-            ? `Showing ${candidateCards.length} ranked matches based on your profile.`
+            ? `Discover ${publicOffersQuery.data?.totalElements ?? "-"} active job offers. We've highlighted your best matches!`
             : `Discover ${publicOffersQuery.data?.totalElements ?? "-"} active job offers from top companies.`}
         </p>
       </div>
@@ -273,7 +262,7 @@ export function JobOffersPage() {
             </div>
           )}
 
-          {(!search || isCandidateView) && (
+          {!search && (
             <Pagination
               currentPage={page}
               totalPages={totalPages}
