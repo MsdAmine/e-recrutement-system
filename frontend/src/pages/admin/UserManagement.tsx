@@ -32,7 +32,7 @@ const UserManagement: React.FC = () => {
     }
   };
 
-  const filteredUsers = users.filter((user) => 
+  const filteredUsers = users.filter((user) =>
     `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -46,7 +46,7 @@ const UserManagement: React.FC = () => {
           <h1 className="text-3xl font-bold text-foreground">Manage Users</h1>
           <p className="text-muted-foreground mt-2">Activate or deactivate candidate and recruiter accounts.</p>
         </div>
-        
+
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
           <input
@@ -88,11 +88,11 @@ const UserManagement: React.FC = () => {
                   </td>
                   <td className="px-6 py-4">
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      user.role.name === "ROLE_ADMIN" ? "bg-amber-100 text-amber-700" :
-                      user.role.name === "ROLE_RECRUITER" ? "bg-purple-100 text-purple-700" :
+                      user.role === "ROLE_ADMIN" ? "bg-amber-100 text-amber-700" :
+                      user.role === "ROLE_RECRUITER" ? "bg-purple-100 text-purple-700" :
                       "bg-blue-100 text-blue-700"
                     }`}>
-                      {user.role.name.replace("ROLE_", "")}
+                      {user.role.replace("ROLE_", "")}
                     </span>
                   </td>
                   <td className="px-6 py-4">
@@ -107,10 +107,10 @@ const UserManagement: React.FC = () => {
                   <td className="px-6 py-4 text-right">
                     <button
                       onClick={() => handleToggleStatus(user.id)}
-                      disabled={user.role.name === "ROLE_ADMIN"}
+                      disabled={user.role === "ROLE_ADMIN"}
                       className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
-                        user.enabled 
-                          ? "bg-destructive/10 text-destructive hover:bg-destructive/20" 
+                        user.enabled
+                          ? "bg-destructive/10 text-destructive hover:bg-destructive/20"
                           : "bg-success/10 text-success hover:bg-success/20"
                       } disabled:opacity-50 disabled:cursor-not-allowed`}
                     >

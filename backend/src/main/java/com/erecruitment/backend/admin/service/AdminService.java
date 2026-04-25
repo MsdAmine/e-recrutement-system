@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +27,7 @@ public class AdminService {
     private final JobOfferRepository jobOfferRepository;
     private final JobApplicationRepository jobApplicationRepository;
 
+    @Transactional(readOnly = true)
     public List<UserResponse> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(this::mapToUserResponse)
@@ -54,6 +54,7 @@ public class AdminService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public List<JobOfferResponse> getAllJobOffers() {
         return jobOfferRepository.findAll().stream()
                 .map(this::mapToJobResponse)
@@ -83,6 +84,7 @@ public class AdminService {
         jobOfferRepository.deleteById(jobId);
     }
 
+    @Transactional(readOnly = true)
     public PlatformStatsResponse getPlatformStats() {
         long totalUsers = userRepository.count();
         long totalCandidates = userRepository.countByRole_Name(RoleName.ROLE_CANDIDATE);
