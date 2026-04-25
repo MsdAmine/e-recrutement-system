@@ -163,10 +163,7 @@ export interface User {
   lastName: string;
   email: string;
   enabled: boolean;
-  role: {
-    id: number;
-    name: Role;
-  };
+  role: Role;
 }
 
 // ── API Error ─────────────────────────────────────────────

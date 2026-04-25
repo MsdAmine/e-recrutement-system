@@ -19,7 +19,7 @@ function isTheme(value: string | null): value is Theme {
 
 function getInitialTheme(): Theme {
   if (typeof window === "undefined") {
-    return "dark";
+    return "light";
   }
 
   const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
@@ -27,7 +27,7 @@ function getInitialTheme(): Theme {
     return storedTheme;
   }
 
-  return "dark";
+  return "light";
 }
 
 function applyTheme(theme: Theme) {
