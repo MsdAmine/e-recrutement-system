@@ -9,6 +9,7 @@ import com.erecruitment.backend.job.repository.JobOfferRepository;
 import com.erecruitment.backend.user.entity.User;
 import com.erecruitment.backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class JobOfferService {
     private final JobOfferRepository jobOfferRepository;
     private final UserRepository userRepository;
 
+    @CacheEvict(value = {"candidateMatches", "candidateJobMatches", "jobEmbeddings"}, allEntries = true)
     public JobOfferResponse createJobOffer(String recruiterEmail, JobOfferRequest request) {
         User recruiter = userRepository.findByEmail(recruiterEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("Recruiter not found"));
@@ -30,6 +32,8 @@ public class JobOfferService {
                 .contractType(request.contractType())
                 .location(request.location())
                 .salary(request.salary())
+                .requiredSkills(request.requiredSkills())
+                .requiredExperienceYears(request.requiredExperienceYears())
                 .active(request.active())
                 .recruiter(recruiter)
                 .build();
@@ -38,6 +42,7 @@ public class JobOfferService {
         return mapToResponse(saved);
     }
 
+    @CacheEvict(value = {"candidateMatches", "candidateJobMatches", "jobEmbeddings"}, allEntries = true)
     public JobOfferResponse updateJobOffer(Long id, String recruiterEmail, JobOfferRequest request) {
         JobOffer jobOffer = jobOfferRepository.findOneWithRecruiterById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Job offer not found"));
@@ -51,12 +56,15 @@ public class JobOfferService {
         jobOffer.setContractType(request.contractType());
         jobOffer.setLocation(request.location());
         jobOffer.setSalary(request.salary());
+        jobOffer.setRequiredSkills(request.requiredSkills());
+        jobOffer.setRequiredExperienceYears(request.requiredExperienceYears());
         jobOffer.setActive(request.active());
 
         JobOffer updated = jobOfferRepository.save(jobOffer);
         return mapToResponse(updated);
     }
 
+    @CacheEvict(value = {"candidateMatches", "candidateJobMatches", "jobEmbeddings"}, allEntries = true)
     public void deleteJobOffer(Long id, String recruiterEmail) {
         JobOffer jobOffer = jobOfferRepository.findOneWithRecruiterById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Job offer not found"));
@@ -96,6 +104,8 @@ public class JobOfferService {
                 .contractType(jobOffer.getContractType())
                 .location(jobOffer.getLocation())
                 .salary(jobOffer.getSalary())
+                .requiredSkills(jobOffer.getRequiredSkills())
+                .requiredExperienceYears(jobOffer.getRequiredExperienceYears())
                 .active(jobOffer.isActive())
                 .createdAt(jobOffer.getCreatedAt())
                 .recruiterId(jobOffer.getRecruiter().getId())

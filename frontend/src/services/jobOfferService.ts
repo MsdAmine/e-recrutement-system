@@ -7,6 +7,8 @@ export interface CreateJobOfferPayload {
   contractType: string;
   location: string;
   salary?: number | null;
+  requiredSkills?: string | null;
+  requiredExperienceYears?: number | null;
   active: boolean;
 }
 

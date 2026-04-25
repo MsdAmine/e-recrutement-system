@@ -13,6 +13,8 @@ public record JobOfferResponse(
         String contractType,
         String location,
         BigDecimal salary,
+        String requiredSkills,
+        Integer requiredExperienceYears,
         Boolean active,
         LocalDateTime createdAt,
         Long recruiterId,

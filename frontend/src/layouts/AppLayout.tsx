@@ -3,6 +3,7 @@ import { useAuth } from "@/store/authStore";
 import { AppSidebar } from "@/components/navigation/AppSidebar";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { BellIcon, MenuIcon, LogOutIcon, BriefcaseIcon } from "lucide-react";
 import { getInitials } from "@/lib/utils";
 import { useState } from "react";
@@ -66,6 +67,7 @@ export function AppLayout() {
           </Link>
 
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <Button variant="ghost" size="icon" asChild>
               <Link to={notificationsHref} onClick={() => setMobileSidebarOpen(false)}>
                 <BellIcon className="h-4 w-4" />
@@ -80,6 +82,7 @@ export function AppLayout() {
         {/* Desktop top bar */}
         <header className="hidden lg:flex h-14 items-center justify-end px-6 border-b border-border bg-card/50">
           <div className="flex items-center gap-3">
+            <ThemeToggle />
             <Button variant="ghost" size="icon" asChild>
               <Link to={notificationsHref} aria-label="Notifications">
                 <BellIcon className="h-4 w-4" />

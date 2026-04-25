@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { motion } from "motion/react";
 import { useAuth } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { BriefcaseIcon, MenuIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -54,6 +55,7 @@ export function PublicNavbar() {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-3">
+            <ThemeToggle />
             {isAuthenticated ? (
               <Button asChild size="sm">
                 <Link to={dashboardHref}>Go to Dashboard</Link>
@@ -97,6 +99,12 @@ export function PublicNavbar() {
                 {link.label}
               </Link>
             ))}
+            <div className="pt-1 px-1">
+              <ThemeToggle
+                showLabel
+                className="w-full justify-start text-muted-foreground hover:text-foreground"
+              />
+            </div>
             <div className="flex gap-2 pt-2 border-t border-border/50 mt-1">
               {isAuthenticated ? (
                 <Button size="sm" asChild className="flex-1">

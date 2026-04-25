@@ -32,6 +32,11 @@ export interface CandidateProfile {
   headline: string | null;
   summary: string | null;
   cvUrl: string | null;
+  skills: string | null;
+  yearsOfExperience: number | null;
+  expectedSalary: number | null;
+  preferredContractType: ContractType | null;
+  preferredLocation: string | null;
 }
 
 export interface CandidateDashboard {
@@ -75,10 +80,33 @@ export interface JobOffer {
   contractType: ContractType;
   location: string;
   salary: number | null;
+  requiredSkills: string | null;
+  requiredExperienceYears: number | null;
   active: boolean;
   createdAt: string;
   recruiterId: number;
   recruiterEmail: string;
+}
+
+export interface MatchResult {
+  jobId: number;
+  title: string;
+  description: string;
+  location: string;
+  contractType: ContractType;
+  salary: number | null;
+  score: number;
+  matchCategory: "HIGH_MATCH" | "GOOD_MATCH" | "EXPLORE";
+  ruleBasedScore: number;
+  semanticScore: number;
+  breakdown: {
+    skills: number;
+    experience: number;
+    location: number;
+    salary: number;
+    contract: number;
+  };
+  explanations: string[];
 }
 
 // ── Applications ──────────────────────────────────────────

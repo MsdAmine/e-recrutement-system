@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import { jobOfferService } from "@/services/jobOfferService";
+import { matchingService } from "@/services/matchingService";
 import { queryKeys } from "@/lib/queryKeys";
 import { useAuth } from "@/store/authStore";
 import { getJobDetailPath } from "@/lib/auth";
@@ -12,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Pagination } from "@/components/shared/Pagination";
 import { EmptyState, Skeleton } from "@/components/shared/SharedComponents";
+import { ContractType, MatchResult } from "@/types";
 import {
   MapPinIcon,
   BriefcaseIcon,
@@ -21,39 +23,103 @@ import {
   BuildingIcon,
   SparklesIcon,
   ArrowUpRightIcon,
+  FlameIcon,
+  CheckCircleIcon,
+  AlertTriangleIcon,
 } from "lucide-react";
 
 const PAGE_SIZE = 9;
+
+type JobCard = {
+  id: number;
+  title: string;
+  description: string;
+  contractType: ContractType;
+  location: string;
+  salary: number | null;
+  recruiterEmail?: string;
+  createdAt?: string;
+  match?: MatchResult;
+};
+
+function getMatchBadgeClass(score: number) {
+  if (score >= 80) return "border-success/30 bg-success/10 text-success";
+  if (score >= 60) return "border-warning/30 bg-warning/10 text-warning";
+  return "border-destructive/30 bg-destructive/10 text-destructive";
+}
 
 export function JobOffersPage() {
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState("");
   const { user } = useAuth();
+  const isCandidateView = user?.role === "ROLE_CANDIDATE";
 
-  const { data, isLoading, isError } = useQuery({
+  const publicOffersQuery = useQuery({
     queryKey: queryKeys.jobOffers(page, PAGE_SIZE),
     queryFn: () => jobOfferService.getPublicOffers(page, PAGE_SIZE),
+    enabled: !isCandidateView,
   });
 
-  const filtered = data?.content.filter(
+  const candidateMatchesQuery = useQuery({
+    queryKey: queryKeys.candidateMatches,
+    queryFn: matchingService.getCandidateMatches,
+    enabled: isCandidateView,
+  });
+
+  const publicCards: JobCard[] = (publicOffersQuery.data?.content ?? []).map((offer) => ({
+    id: offer.id,
+    title: offer.title,
+    description: offer.description,
+    contractType: offer.contractType,
+    location: offer.location,
+    salary: offer.salary,
+    recruiterEmail: offer.recruiterEmail,
+    createdAt: offer.createdAt,
+  }));
+
+  const candidateCards: JobCard[] = (candidateMatchesQuery.data ?? []).map((match) => ({
+    id: match.jobId,
+    title: match.title,
+    description: match.description,
+    contractType: match.contractType,
+    location: match.location,
+    salary: match.salary,
+    match,
+  }));
+
+  const allCards = isCandidateView ? candidateCards : publicCards;
+  const filtered = allCards.filter(
     (offer) =>
       search.trim() === "" ||
       offer.title.toLowerCase().includes(search.toLowerCase()) ||
       offer.location.toLowerCase().includes(search.toLowerCase())
   );
 
+  const paginatedCards = isCandidateView
+    ? filtered.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE)
+    : filtered;
+
+  const totalPages = isCandidateView
+    ? Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
+    : (publicOffersQuery.data?.totalPages ?? 1);
+
+  const isLoading = isCandidateView ? candidateMatchesQuery.isLoading : publicOffersQuery.isLoading;
+  const isError = isCandidateView ? candidateMatchesQuery.isError : publicOffersQuery.isError;
+
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
       <div className="text-center mb-10">
         <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1.5 text-xs font-medium text-primary">
           <SparklesIcon className="h-3.5 w-3.5" />
-          Curated Opportunities
+          {isCandidateView ? "Smart Matching Recommendations" : "Curated Opportunities"}
         </div>
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-3">
-          Browse Opportunities
+          {isCandidateView ? "Recommended Jobs For You" : "Browse Opportunities"}
         </h1>
         <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-          Discover {data?.totalElements ?? "-"} active job offers from top companies.
+          {isCandidateView
+            ? `Showing ${candidateCards.length} ranked matches based on your profile.`
+            : `Discover ${publicOffersQuery.data?.totalElements ?? "-"} active job offers from top companies.`}
         </p>
       </div>
 
@@ -65,7 +131,10 @@ export function JobOffersPage() {
           placeholder="Search by title or location..."
           className="pl-10 h-11 rounded-xl bg-card/90 border-border/80 shadow-sm focus-visible:ring-primary/40"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(0);
+          }}
         />
       </div>
 
@@ -89,17 +158,17 @@ export function JobOffersPage() {
         </div>
       )}
 
-      {!isLoading && filtered !== undefined && (
+      {!isLoading && (
         <>
           {filtered.length === 0 ? (
             <EmptyState
               icon={<BriefcaseIcon className="h-12 w-12" />}
               title="No jobs found"
-              description="Try adjusting your search or check back later."
+              description={isCandidateView ? "Try updating your profile skills and preferences." : "Try adjusting your search or check back later."}
             />
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {filtered.map((offer, i) => (
+              {paginatedCards.map((offer, i) => (
                 <motion.article
                   key={offer.id}
                   initial={{ opacity: 0, y: 16 }}
@@ -119,10 +188,29 @@ export function JobOffersPage() {
                         {offer.title}
                       </h2>
                       <p className="text-xs text-muted-foreground mt-0.5 truncate">
-                        {offer.recruiterEmail}
+                        {isCandidateView ? "Personalized recommendation" : offer.recruiterEmail}
                       </p>
                     </div>
                   </div>
+
+                  {offer.match && (
+                    <div className="relative mb-3">
+                      <Badge
+                        className={`gap-1 border ${getMatchBadgeClass(offer.match.score)}`}
+                        title="Includes semantic matching of your experience and job description"
+                      >
+                        <FlameIcon className="h-3.5 w-3.5" />
+                        {offer.match.score}% Match
+                      </Badge>
+                      <span className="ml-2 text-xs text-muted-foreground">
+                        {offer.match.matchCategory === "HIGH_MATCH"
+                          ? "High Match"
+                          : offer.match.matchCategory === "GOOD_MATCH"
+                            ? "Good Match"
+                            : "Explore"}
+                      </span>
+                    </div>
+                  )}
 
                   <p className="relative text-sm text-muted-foreground leading-relaxed line-clamp-2 mb-4 flex-1">
                     {offer.description}
@@ -136,7 +224,7 @@ export function JobOffersPage() {
                     <Badge variant="outline">
                       {getContractTypeLabel(offer.contractType)}
                     </Badge>
-                    {offer.salary && (
+                    {offer.salary !== null && offer.salary !== undefined && (
                       <Badge variant="outline" className="gap-1">
                         <BanknoteIcon className="h-3 w-3" />
                         {formatSalary(offer.salary)}
@@ -144,10 +232,34 @@ export function JobOffersPage() {
                     )}
                   </div>
 
+                  {offer.match && (
+                    <div className="relative mb-4 rounded-lg border border-border/70 bg-muted/30 p-3">
+                      <p className="text-sm font-medium">Why this matches</p>
+                      <div className="mt-3 space-y-2">
+                        {offer.match.explanations.slice(0, 3).map((explanation) => (
+                          <div key={explanation} className="flex items-start gap-2 text-xs text-muted-foreground">
+                            {explanation.toLowerCase().includes("gap") || explanation.toLowerCase().includes("missing") ? (
+                              <AlertTriangleIcon className="h-3.5 w-3.5 mt-0.5 text-warning shrink-0" />
+                            ) : (
+                              <CheckCircleIcon className="h-3.5 w-3.5 mt-0.5 text-success shrink-0" />
+                            )}
+                            <span>{explanation}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <details className="mt-3 text-[11px] text-muted-foreground">
+                        <summary className="cursor-pointer select-none">Scoring details</summary>
+                        <p className="mt-1">
+                          Rule-based: {offer.match.ruleBasedScore}% | Semantic: {offer.match.semanticScore}%
+                        </p>
+                      </details>
+                    </div>
+                  )}
+
                   <div className="relative flex items-center justify-between">
                     <span className="text-xs text-muted-foreground flex items-center gap-1">
                       <CalendarIcon className="h-3 w-3" />
-                      {formatDate(offer.createdAt)}
+                      {offer.createdAt ? formatDate(offer.createdAt) : "Ranked recommendation"}
                     </span>
                     <Button size="sm" variant="outline" asChild className="group/btn">
                       <Link to={getJobDetailPath(user?.role, offer.id)}>
@@ -161,10 +273,10 @@ export function JobOffersPage() {
             </div>
           )}
 
-          {!search && (
+          {(!search || isCandidateView) && (
             <Pagination
               currentPage={page}
-              totalPages={data?.totalPages ?? 1}
+              totalPages={totalPages}
               onPageChange={setPage}
               isLoading={isLoading}
             />
@@ -174,4 +286,3 @@ export function JobOffersPage() {
     </div>
   );
 }
-

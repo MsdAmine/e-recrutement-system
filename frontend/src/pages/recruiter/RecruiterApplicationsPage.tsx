@@ -35,13 +35,14 @@ export function RecruiterApplicationsPage() {
   const [page, setPage] = useState(0);
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const queryClient = useQueryClient();
+  const recruiterApplicationsQueryKey = queryKeys.recruiterApplications(
+    page,
+    PAGE_SIZE,
+    statusFilter !== "ALL" ? statusFilter : undefined
+  );
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: queryKeys.recruiterApplications(
-      page,
-      PAGE_SIZE,
-      statusFilter !== "ALL" ? statusFilter : undefined
-    ),
+    queryKey: recruiterApplicationsQueryKey,
     queryFn: () =>
       applicationService.getRecruiterApplications(
         page,
@@ -58,30 +59,48 @@ export function RecruiterApplicationsPage() {
       appId: number;
       status: ApplicationStatus;
     }) => applicationService.updateStatus(appId, { status }),
-    onSuccess: (updatedApplication) => {
+    onSuccess: (updatedApplication, variables) => {
+      const nextStatus = updatedApplication.status ?? variables.status;
+
       const patchStatus = (oldPage: Page<Application> | undefined) => {
         if (!oldPage) return oldPage;
+        if (!oldPage.content.some((app) => app.id === updatedApplication.id)) {
+          return oldPage;
+        }
+
         return {
           ...oldPage,
           content: oldPage.content.map((app) =>
             app.id === updatedApplication.id
-              ? { ...app, status: updatedApplication.status }
+              ? { ...app, status: nextStatus }
               : app
           ),
         };
       };
 
-      queryClient.setQueriesData<Page<Application>>(
-        { queryKey: ["recruiterApplications"] },
+      queryClient.setQueryData<Page<Application>>(
+        recruiterApplicationsQueryKey,
         patchStatus
       );
       queryClient.setQueriesData<Page<Application>>(
-        { queryKey: ["jobOfferApplications"] },
+        { queryKey: queryKeys.recruiterApplicationsRoot, exact: false },
+        patchStatus
+      );
+      queryClient.setQueriesData<Page<Application>>(
+        { queryKey: queryKeys.jobOfferApplicationsRoot, exact: false },
         patchStatus
       );
 
-      queryClient.invalidateQueries({ queryKey: ["recruiterApplications"] });
-      queryClient.invalidateQueries({ queryKey: ["jobOfferApplications"] });
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.recruiterApplicationsRoot,
+        exact: false,
+        refetchType: "active",
+      });
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.jobOfferApplicationsRoot,
+        exact: false,
+        refetchType: "active",
+      });
     },
   });
 

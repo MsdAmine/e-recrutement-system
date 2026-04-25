@@ -19,6 +19,9 @@ public interface JobOfferRepository extends JpaRepository<JobOffer, Long> {
     Page<JobOffer> findByActiveTrue(Pageable pageable);
 
     @EntityGraph(attributePaths = {"recruiter"})
+    List<JobOffer> findByActiveTrue();
+
+    @EntityGraph(attributePaths = {"recruiter"})
     Page<JobOffer> findByRecruiterId(Long recruiterId, Pageable pageable);
 
     @EntityGraph(attributePaths = {"recruiter"})

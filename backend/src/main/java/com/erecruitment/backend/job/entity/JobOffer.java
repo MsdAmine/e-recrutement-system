@@ -35,6 +35,11 @@ public class JobOffer {
     @Column(precision = 12, scale = 2)
     private BigDecimal salary;
 
+    @Column(columnDefinition = "TEXT")
+    private String requiredSkills;
+
+    private Integer requiredExperienceYears;
+
     @Column(nullable = false)
     private boolean active;
 

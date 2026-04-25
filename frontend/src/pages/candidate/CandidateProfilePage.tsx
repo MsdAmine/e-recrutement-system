@@ -17,6 +17,8 @@ import {
   AlignLeftIcon,
   SparklesIcon,
   ExternalLinkIcon,
+  BanknoteIcon,
+  Clock3Icon,
 } from "lucide-react";
 
 function ProfileRow({
@@ -143,6 +145,34 @@ export function CandidateProfilePage() {
               value={profile?.cvUrl ?? null}
               isLink
             />
+            <ProfileRow
+              icon={<Clock3Icon className="h-4 w-4" />}
+              label="Years of Experience"
+              value={
+                profile?.yearsOfExperience !== null && profile?.yearsOfExperience !== undefined
+                  ? `${profile.yearsOfExperience} years`
+                  : null
+              }
+            />
+            <ProfileRow
+              icon={<BanknoteIcon className="h-4 w-4" />}
+              label="Expected Salary"
+              value={
+                profile?.expectedSalary !== null && profile?.expectedSalary !== undefined
+                  ? `${profile.expectedSalary} MAD`
+                  : null
+              }
+            />
+            <ProfileRow
+              icon={<BriefcaseIcon className="h-4 w-4" />}
+              label="Preferred Contract"
+              value={profile?.preferredContractType ?? null}
+            />
+            <ProfileRow
+              icon={<MapPinIcon className="h-4 w-4" />}
+              label="Preferred Location"
+              value={profile?.preferredLocation ?? null}
+            />
           </div>
         </div>
 
@@ -156,6 +186,15 @@ export function CandidateProfilePage() {
           <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
             {profile?.summary || "No summary added yet."}
           </p>
+          <Separator className="my-4" />
+          <div>
+            <h3 className="font-semibold text-sm tracking-wide uppercase text-muted-foreground mb-2">
+              Skills
+            </h3>
+            <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
+              {profile?.skills || "No skills added yet."}
+            </p>
+          </div>
         </div>
       </motion.div>
     </div>
