@@ -30,6 +30,7 @@ public class AdminService {
     @Transactional(readOnly = true)
     public List<UserResponse> getAllUsers() {
         return userRepository.findAll().stream()
+                .filter(user -> user.getRole().getName() != RoleName.ROLE_ADMIN)
                 .map(this::mapToUserResponse)
                 .collect(Collectors.toList());
     }
@@ -86,9 +87,9 @@ public class AdminService {
 
     @Transactional(readOnly = true)
     public PlatformStatsResponse getPlatformStats() {
-        long totalUsers = userRepository.count();
         long totalCandidates = userRepository.countByRole_Name(RoleName.ROLE_CANDIDATE);
         long totalRecruiters = userRepository.countByRole_Name(RoleName.ROLE_RECRUITER);
+        long totalUsers = totalCandidates + totalRecruiters;
         long totalJobOffers = jobOfferRepository.count();
         long totalApplications = jobApplicationRepository.count();
 
