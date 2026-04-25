@@ -17,6 +17,10 @@ const adminService = {
     return response.data;
   },
 
+  deleteUser: async (userId: number): Promise<void> => {
+    await apiClient.delete(`/admin/users/${userId}`);
+  },
+
   getAllJobs: async (): Promise<JobOffer[]> => {
     const response = await apiClient.get("/admin/jobs");
     return response.data;

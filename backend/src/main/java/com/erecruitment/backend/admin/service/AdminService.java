@@ -26,6 +26,8 @@ public class AdminService {
     private final RoleRepository roleRepository;
     private final JobOfferRepository jobOfferRepository;
     private final JobApplicationRepository jobApplicationRepository;
+    private final com.erecruitment.backend.candidate.repository.CandidateProfileRepository candidateProfileRepository;
+    private final com.erecruitment.backend.recruiter.repository.RecruiterProfileRepository recruiterProfileRepository;
 
     @Transactional(readOnly = true)
     public List<UserResponse> getAllUsers() {
@@ -83,6 +85,32 @@ public class AdminService {
             throw new ResourceNotFoundException("Job offer not found");
         }
         jobOfferRepository.deleteById(jobId);
+    }
+
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (user.getRole().getName() == RoleName.ROLE_ADMIN) {
+            throw new IllegalArgumentException("Cannot delete admin user");
+        }
+
+        if (user.getRole().getName() == RoleName.ROLE_CANDIDATE) {
+            candidateProfileRepository.findByUserId(userId).ifPresent(candidateProfileRepository::delete);
+            List<com.erecruitment.backend.application.entity.JobApplication> applications = jobApplicationRepository.findByCandidateId(userId, org.springframework.data.domain.Pageable.unpaged()).getContent();
+            jobApplicationRepository.deleteAll(applications);
+        } else if (user.getRole().getName() == RoleName.ROLE_RECRUITER) {
+            recruiterProfileRepository.findByUserId(userId).ifPresent(recruiterProfileRepository::delete);
+            List<JobOffer> offers = jobOfferRepository.findByRecruiterId(userId, org.springframework.data.domain.Pageable.unpaged()).getContent();
+            for (JobOffer offer : offers) {
+                List<com.erecruitment.backend.application.entity.JobApplication> apps = jobApplicationRepository.findByJobOfferId(offer.getId(), org.springframework.data.domain.Pageable.unpaged()).getContent();
+                jobApplicationRepository.deleteAll(apps);
+            }
+            jobOfferRepository.deleteAll(offers);
+        }
+
+        userRepository.delete(user);
     }
 
     @Transactional(readOnly = true)

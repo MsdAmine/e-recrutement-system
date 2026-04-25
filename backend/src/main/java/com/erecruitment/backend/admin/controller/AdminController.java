@@ -29,6 +29,12 @@ public class AdminController {
         return ResponseEntity.ok(adminService.toggleUserStatus(id));
     }
 
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        adminService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/jobs")
     public ResponseEntity<List<com.erecruitment.backend.job.dto.JobOfferResponse>> getAllJobs() {
         return ResponseEntity.ok(adminService.getAllJobOffers());
