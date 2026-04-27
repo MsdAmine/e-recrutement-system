@@ -50,4 +50,14 @@ public class GlobalExceptionHandler {
         problem.setTitle("Duplicate application");
         return problem;
     }
+
+    @ExceptionHandler(Exception.class)
+    public ProblemDetail handleUnexpected(Exception ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "An unexpected error occurred: " + ex.getMessage()
+        );
+        problem.setTitle("Internal server error");
+        return problem;
+    }
 }

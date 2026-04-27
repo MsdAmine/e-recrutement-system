@@ -13,6 +13,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +43,7 @@ public class JobOfferService {
         return mapToResponse(saved);
     }
 
+    @Transactional
     @CacheEvict(value = {"candidateMatches", "candidateJobMatches", "jobEmbeddings"}, allEntries = true)
     public JobOfferResponse updateJobOffer(Long id, String recruiterEmail, JobOfferRequest request) {
         JobOffer jobOffer = jobOfferRepository.findOneWithRecruiterById(id)
