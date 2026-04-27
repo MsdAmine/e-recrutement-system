@@ -161,9 +161,9 @@ export function JobOfferDetailPage() {
         className={showApplyPanel ? "grid gap-5 lg:grid-cols-[1fr_320px]" : "space-y-5"}
       >
         <div className="space-y-5">
-          <div className="surface-card p-6">
+          <div className="surface-emphasized p-6">
             <div className="flex items-start gap-4">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/20">
+              <div className="icon-tile h-14 w-14">
                 <BuildingIcon className="h-7 w-7" />
               </div>
               <div className="flex-1">

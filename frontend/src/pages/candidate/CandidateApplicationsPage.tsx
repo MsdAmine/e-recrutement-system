@@ -71,14 +71,14 @@ export function CandidateApplicationsPage() {
                   initial={{ opacity: 0, x: -12 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.04 }}
-                  className="group rounded-lg border border-border/80 bg-card/95 p-4 shadow-[0_1px_2px_hsl(222_38%_9%/0.04),0_8px_22px_hsl(222_38%_9%/0.035)] transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-[0_2px_4px_hsl(222_38%_9%/0.055),0_14px_34px_hsl(222_38%_9%/0.075)]"
+                  className="list-row group p-3.5"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
                       <h3 className="truncate font-semibold transition-colors group-hover:text-primary">
                         {app.jobOfferTitle}
                       </h3>
-                      <div className="mt-2 flex flex-wrap items-center gap-3">
+                      <div className="mt-1.5 flex flex-wrap items-center gap-3">
                         <span className="flex items-center gap-1 text-xs text-muted-foreground">
                           <CalendarIcon className="h-3 w-3" />
                           Applied {formatDate(app.appliedAt)}

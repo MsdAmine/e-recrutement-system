@@ -83,7 +83,7 @@
   }
 
   h1 {
-    @apply text-2xl font-semibold tracking-tight text-foreground md:text-3xl;
+    @apply text-3xl font-semibold tracking-tight text-foreground md:text-[2rem];
     text-wrap: balance;
   }
 
@@ -125,14 +125,31 @@
   }
 
   .surface-card {
-    @apply relative overflow-hidden rounded-lg border border-border/80 bg-card shadow-[0_1px_2px_hsl(222_38%_9%/0.05),0_12px_30px_hsl(222_38%_9%/0.045)] dark:shadow-[0_1px_2px_hsl(0_0%_0%/0.35),0_18px_38px_hsl(0_0%_0%/0.24)];
+    @apply relative overflow-hidden rounded-lg border border-border/75 bg-card shadow-[0_1px_2px_hsl(222_38%_9%/0.05),0_10px_26px_hsl(222_38%_9%/0.04)] dark:shadow-[0_1px_2px_hsl(0_0%_0%/0.35),0_16px_34px_hsl(0_0%_0%/0.22)];
     background-image:
       linear-gradient(180deg, hsl(var(--card)) 0%, hsl(var(--card) / 0.985) 100%),
       linear-gradient(180deg, hsl(0 0% 100% / 0.72), transparent);
   }
 
   .surface-card-hover {
-    @apply transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-[0_2px_4px_hsl(222_38%_9%/0.06),0_18px_42px_hsl(222_38%_9%/0.08)] dark:hover:shadow-[0_2px_4px_hsl(0_0%_0%/0.45),0_22px_50px_hsl(0_0%_0%/0.32)];
+    @apply transition-all duration-150 hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-[0_2px_4px_hsl(222_38%_9%/0.06),0_14px_34px_hsl(222_38%_9%/0.07)] dark:hover:shadow-[0_2px_4px_hsl(0_0%_0%/0.42),0_20px_46px_hsl(0_0%_0%/0.3)];
+  }
+
+  .surface-emphasized {
+    @apply relative overflow-hidden rounded-lg border border-primary/25 bg-card shadow-[0_1px_2px_hsl(var(--primary)/0.11),0_16px_38px_hsl(var(--primary)/0.08)] dark:shadow-black/30;
+  }
+
+  .surface-emphasized::before {
+    @apply pointer-events-none absolute inset-x-0 top-0 h-1 bg-primary;
+    content: "";
+  }
+
+  .list-row {
+    @apply rounded-lg border border-border/70 bg-card/80 shadow-[0_1px_2px_hsl(222_38%_9%/0.025)] transition-all duration-150 hover:border-primary/25 hover:bg-card hover:shadow-[0_8px_20px_hsl(222_38%_9%/0.045)];
+  }
+
+  .icon-tile {
+    @apply flex shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary shadow-sm ring-1 ring-primary/15;
   }
 
   .kicker {
@@ -144,7 +161,7 @@
   }
 
   .section-title {
-    @apply text-sm font-semibold text-foreground;
+    @apply text-sm font-semibold leading-5 text-foreground;
   }
 
   .section-subtitle {

@@ -93,7 +93,7 @@ export function CandidateProfilePage() {
         animate={{ opacity: 1, y: 0 }}
         className="space-y-6"
       >
-        <div className="surface-card relative overflow-hidden p-6">
+        <div className="surface-emphasized p-6">
           <div className="mb-6 flex items-start justify-between gap-4">
             <div className="flex items-center gap-4">
               <Avatar className="h-16 w-16 ring-1 ring-primary/20">

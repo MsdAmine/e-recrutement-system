@@ -67,19 +67,19 @@ export function RegisterCandidatePage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-16">
+    <div className="flex min-h-screen items-center justify-center px-4 py-16">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="w-full max-w-sm"
       >
-        <div className="flex flex-col items-center mb-8">
+        <div className="mb-8 flex flex-col items-center">
           <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-[0_1px_2px_hsl(var(--primary)/0.25),0_12px_24px_hsl(var(--primary)/0.18)]">
             <UserIcon className="h-6 w-6" />
           </div>
-          <h1 className="text-2xl font-bold">Create your account</h1>
-          <p className="text-muted-foreground text-sm mt-1">Join as a candidate and start applying</p>
+          <h1 className="text-2xl font-semibold">Create your account</h1>
+          <p className="mt-1 text-sm text-muted-foreground">Join as a candidate and start applying</p>
         </div>
 
         <div className="surface-card p-6">
@@ -95,27 +95,27 @@ export function RegisterCandidatePage() {
 
             <FormField label="Email" error={errors.email?.message} required>
               <div className="relative">
-                <MailIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                <MailIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input id="reg-c-email" type="email" placeholder="jane@example.com" className="pl-9" {...register("email")} />
               </div>
             </FormField>
 
             <FormField label="Password" error={errors.password?.message} required>
               <div className="relative">
-                <LockIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                <LockIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input id="reg-c-password" type="password" placeholder="********" className="pl-9" {...register("password")} />
               </div>
             </FormField>
 
             <FormField label="Confirm Password" error={errors.confirmPassword?.message} required>
               <div className="relative">
-                <LockIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                <LockIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input id="reg-c-confirm" type="password" placeholder="********" className="pl-9" {...register("confirmPassword")} />
               </div>
             </FormField>
 
             {mutation.isError && (
-              <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2.5 text-sm text-destructive">
+              <div className="rounded-md border border-destructive/20 bg-destructive/10 px-3 py-2.5 text-sm text-destructive">
                 {getError(mutation.error)}
               </div>
             )}
@@ -126,7 +126,7 @@ export function RegisterCandidatePage() {
           </form>
         </div>
 
-        <p className="text-center text-sm text-muted-foreground mt-6">
+        <p className="mt-6 text-center text-sm text-muted-foreground">
           Already have an account?{" "}
           <Link to="/login" className="text-foreground font-medium hover:underline">Sign in</Link>
           {" / "}

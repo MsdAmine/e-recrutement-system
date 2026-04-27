@@ -125,7 +125,7 @@ export function RecruiterJobOffersPage() {
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.04 }}
-                  className="rounded-lg border border-border/80 bg-card/95 p-5 shadow-[0_1px_2px_hsl(222_38%_9%/0.04),0_8px_22px_hsl(222_38%_9%/0.035)] transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-[0_2px_4px_hsl(222_38%_9%/0.055),0_14px_34px_hsl(222_38%_9%/0.075)]"
+                  className="list-row p-4"
                 >
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div className="flex-1 min-w-0">
@@ -136,7 +136,7 @@ export function RecruiterJobOffersPage() {
                         </Badge>
                       </div>
 
-                      <div className="mt-2 flex flex-wrap gap-3 text-xs text-muted-foreground">
+                      <div className="mt-1.5 flex flex-wrap gap-3 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <MapPinIcon className="h-3 w-3" />
                           {offer.location}

@@ -49,19 +49,19 @@ export function StatCard({ label, value, icon, className, colorClass }: StatCard
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-lg border border-border/80 bg-card p-4 shadow-[0_1px_2px_hsl(222_38%_9%/0.05),0_10px_28px_hsl(222_38%_9%/0.045)] transition-all duration-200 before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-primary/25 before:to-transparent hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-[0_2px_4px_hsl(222_38%_9%/0.06),0_18px_44px_hsl(222_38%_9%/0.08)] dark:shadow-black/25",
+        "surface-emphasized group p-4 transition-all duration-150 hover:-translate-y-0.5 hover:border-primary/35",
         className
       )}
     >
       <div className="relative flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <p className="text-[1.7rem] font-semibold leading-none tracking-tight text-foreground">{value}</p>
+          <p className="text-[1.75rem] font-semibold leading-none tracking-tight text-foreground">{value}</p>
           <p className="mt-2 text-sm font-medium leading-5 text-muted-foreground">{label}</p>
         </div>
         {icon && (
           <div
             className={cn(
-              "flex h-9 w-9 shrink-0 items-center justify-center rounded-md shadow-sm ring-1 ring-inset ring-border/70 transition-transform duration-200 group-hover:scale-105",
+              "flex h-9 w-9 shrink-0 items-center justify-center rounded-md shadow-sm ring-1 ring-inset ring-border/70 transition-transform duration-150 group-hover:scale-105",
               colorClass ?? "bg-primary/10 text-primary"
             )}
           >
@@ -84,7 +84,7 @@ export function PageHeader({ title, description, action, className }: PageHeader
   return (
     <div
       className={cn(
-        "flex flex-col gap-4 border-b border-border/80 pb-6 sm:flex-row sm:items-end sm:justify-between",
+        "flex flex-col gap-4 border-b border-border/80 pb-7 sm:flex-row sm:items-end sm:justify-between",
         className
       )}
     >

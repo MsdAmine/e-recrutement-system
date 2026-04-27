@@ -149,7 +149,7 @@ export function JobOfferApplicationsPage() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.04 }}
-                  className="space-y-4 rounded-lg border border-border/80 bg-card/95 p-5 shadow-[0_1px_2px_hsl(222_38%_9%/0.04),0_8px_22px_hsl(222_38%_9%/0.035)] transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-[0_2px_4px_hsl(222_38%_9%/0.055),0_14px_34px_hsl(222_38%_9%/0.075)]"
+                  className="list-row space-y-3 p-4"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div>
@@ -166,7 +166,7 @@ export function JobOfferApplicationsPage() {
                   </div>
 
                   {/* Cover letter preview */}
-                  <div className="rounded-lg border border-border/70 bg-muted/35 p-3 shadow-inner shadow-slate-950/[0.02]">
+                  <div className="rounded-md bg-muted/40 p-3">
                     <p className="mb-1 text-xs font-medium text-muted-foreground">Cover Letter</p>
                     <p className="line-clamp-3 text-sm leading-6 text-foreground/80">
                       {app.coverLetter}
@@ -174,7 +174,7 @@ export function JobOfferApplicationsPage() {
                   </div>
 
                   {/* Status update */}
-                  <div className="flex flex-wrap items-center gap-2 border-t border-border/60 pt-3">
+                  <div className="flex flex-wrap items-center gap-2 border-t border-border/60 pt-2.5">
                     <span className="text-xs text-muted-foreground">Update status:</span>
                     <Select
                       value={app.status}

@@ -61,7 +61,7 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-16">
+    <div className="flex min-h-screen items-center justify-center px-4 py-16">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
@@ -69,12 +69,12 @@ export function LoginPage() {
         className="w-full max-w-sm"
       >
         {/* Logo */}
-        <div className="flex flex-col items-center mb-8">
+        <div className="mb-8 flex flex-col items-center">
           <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-[0_1px_2px_hsl(var(--primary)/0.25),0_12px_24px_hsl(var(--primary)/0.18)]">
             <BriefcaseIcon className="h-6 w-6" />
           </div>
-          <h1 className="text-2xl font-bold">Welcome back</h1>
-          <p className="text-muted-foreground text-sm mt-1">Sign in to your account</p>
+          <h1 className="text-2xl font-semibold">Welcome back</h1>
+          <p className="mt-1 text-sm text-muted-foreground">Sign in to your account</p>
         </div>
 
         {/* Card */}
@@ -82,7 +82,7 @@ export function LoginPage() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <FormField label="Email" error={errors.email?.message} required>
               <div className="relative">
-                <MailIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                <MailIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   id="login-email"
                   type="email"
@@ -96,7 +96,7 @@ export function LoginPage() {
 
             <FormField label="Password" error={errors.password?.message} required>
               <div className="relative">
-                <LockIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                <LockIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   id="login-password"
                   type="password"
@@ -109,7 +109,7 @@ export function LoginPage() {
             </FormField>
 
             {mutation.isError && (
-              <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2.5 text-sm text-destructive">
+              <div className="rounded-md border border-destructive/20 bg-destructive/10 px-3 py-2.5 text-sm text-destructive">
                 {getErrorMessage(mutation.error)}
               </div>
             )}
@@ -125,7 +125,7 @@ export function LoginPage() {
           </form>
         </div>
 
-        <p className="text-center text-sm text-muted-foreground mt-6">
+        <p className="mt-6 text-center text-sm text-muted-foreground">
           Don't have an account?{" "}
           <Link to="/register/candidate" className="text-foreground font-medium hover:underline">
             Register as Candidate

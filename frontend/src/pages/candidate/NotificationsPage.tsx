@@ -74,7 +74,7 @@ export function NotificationsPage() {
       : (data?.totalElements ?? 0) > 0;
 
   return (
-    <div className="max-w-2xl mx-auto animate-in">
+    <div className="mx-auto max-w-3xl space-y-6 animate-in">
       <PageHeader
         title="Notifications"
         description={data ? `${data.totalElements} total` : ""}
@@ -97,7 +97,7 @@ export function NotificationsPage() {
         value={filter}
         onValueChange={(value) => setFilter(value as "all" | "unread")}
       >
-        <TabsList className="mb-4">
+        <TabsList>
           <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="unread">Unread</TabsTrigger>
         </TabsList>
@@ -140,15 +140,15 @@ export function NotificationsPage() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.03 }}
                   className={cn(
-                    "flex items-start gap-3 rounded-lg border p-4 transition-colors",
+                    "list-row flex items-start gap-3 p-3.5",
                     notif.read
-                      ? "border-border bg-card"
-                      : "border-primary/20 bg-primary/5"
+                      ? ""
+                      : "border-primary/25 bg-primary/5"
                   )}
                 >
                   <div
                     className={cn(
-                      "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg mt-0.5",
+                      "mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md",
                       notif.read
                         ? "bg-muted text-muted-foreground"
                         : "bg-primary/15 text-primary"
