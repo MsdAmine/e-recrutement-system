@@ -96,9 +96,10 @@ export function EditJobOfferPage() {
         active: vals.active,
       }),
     onSuccess: () => {
+      // Navigate first, then invalidate in the background
+      navigate("/recruiter/job-offers");
       queryClient.invalidateQueries({ queryKey: ["myJobOffers"] });
       queryClient.invalidateQueries({ queryKey: queryKeys.jobOffer(offerId) });
-      navigate("/recruiter/job-offers");
     },
   });
 
@@ -169,9 +170,13 @@ export function EditJobOfferPage() {
                 name="contractType"
                 control={control}
                 render={({ field }) => (
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select
+                    key={offer?.id ?? "contract-select"}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  >
                     <SelectTrigger id="edit-job-contract">
-                      <SelectValue />
+                      <SelectValue placeholder="Select type…" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="CDI">Permanent (CDI)</SelectItem>
@@ -228,7 +233,11 @@ export function EditJobOfferPage() {
 
           {mutation.isError && (
             <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2.5 text-sm text-destructive">
-              Failed to update job offer.
+              {mutation.error instanceof AxiosError
+                ? (mutation.error.response?.data as ApiError | undefined)?.detail ??
+                  (mutation.error.response?.data as ApiError | undefined)?.error ??
+                  "Failed to update job offer."
+                : "Failed to update job offer."}
             </div>
           )}
 
