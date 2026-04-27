@@ -123,20 +123,20 @@ export function EditCandidateProfilePage() {
 
   if (isLoading) {
     return (
-      <div className="max-w-2xl mx-auto space-y-4 animate-in">
+      <div className="mx-auto max-w-4xl space-y-4 animate-in">
         <Skeleton className="h-8 w-48" />
-        <Skeleton className="h-72 rounded-xl" />
+        <Skeleton className="h-72 rounded-lg" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto animate-in">
+    <div className="mx-auto max-w-4xl space-y-6 animate-in">
       <PageHeader title="Edit Profile" description="Update your candidate information" />
 
-      <div className="rounded-xl border border-border bg-card p-6">
+      <div className="surface-card p-6">
         <form onSubmit={handleSubmit((v) => mutation.mutate(v))} className="space-y-5">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormField label="Phone" error={errors.phone?.message}>
               <Input id="edit-c-phone" placeholder="+212 6 00 000 000" {...register("phone")} />
             </FormField>
@@ -171,7 +171,7 @@ export function EditCandidateProfilePage() {
             />
           </FormField>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormField label="Years of Experience" error={errors.yearsOfExperience?.message}>
               <Input id="edit-c-experience" type="number" min="0" {...register("yearsOfExperience")} />
             </FormField>
@@ -180,7 +180,7 @@ export function EditCandidateProfilePage() {
             </FormField>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormField label="Preferred Contract Type" error={errors.preferredContractType?.message}>
               <Controller
                 name="preferredContractType"
@@ -207,7 +207,7 @@ export function EditCandidateProfilePage() {
           </div>
 
           {mutation.isError && (
-            <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2.5 text-sm text-destructive">
+            <div className="rounded-md border border-destructive/20 bg-destructive/10 px-3 py-2.5 text-sm text-destructive">
               {getErrorMessage(mutation.error)}
             </div>
           )}

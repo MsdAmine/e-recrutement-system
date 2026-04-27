@@ -78,7 +78,7 @@ const UserManagement: React.FC = () => {
           <input
             type="text"
             placeholder="Search users..."
-            className="pl-10 pr-4 py-2 bg-card border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 w-full md:w-64"
+            className="pl-10 pr-4 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 w-full md:w-64"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -134,7 +134,7 @@ const UserManagement: React.FC = () => {
                     <div className="flex items-center justify-end space-x-2">
                       <button
                         onClick={() => openDetailsModal(user)}
-                        className="p-2 rounded-xl text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
+                        className="p-2 rounded-lg text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
                         title="View Details"
                       >
                         <Eye className="w-4 h-4" />
@@ -142,7 +142,7 @@ const UserManagement: React.FC = () => {
                       <button
                         onClick={() => handleToggleStatus(user.id)}
                         disabled={user.role === "ROLE_ADMIN"}
-                        className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+                        className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
                           user.enabled
                             ? "bg-destructive/10 text-destructive hover:bg-destructive/20"
                             : "bg-success/10 text-success hover:bg-success/20"
@@ -153,7 +153,7 @@ const UserManagement: React.FC = () => {
                       <button
                         onClick={() => openDeleteModal(user)}
                         disabled={user.role === "ROLE_ADMIN"}
-                        className="p-2 rounded-xl text-destructive hover:bg-destructive/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="p-2 rounded-lg text-destructive hover:bg-destructive/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         title="Delete User"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -172,7 +172,7 @@ const UserManagement: React.FC = () => {
 
       {isDetailsModalOpen && selectedUser && createPortal(
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-card w-full max-w-md rounded-2xl shadow-xl overflow-hidden animate-in zoom-in-95">
+          <div className="bg-card w-full max-w-md rounded-lg shadow-[0_20px_60px_hsl(222_38%_9%/0.18)] overflow-hidden animate-in zoom-in-95">
             <div className="flex justify-between items-center p-6 border-b border-border">
               <h3 className="text-xl font-bold text-foreground">User Details</h3>
               <button onClick={() => setIsDetailsModalOpen(false)} className="text-muted-foreground hover:text-foreground">
@@ -204,7 +204,7 @@ const UserManagement: React.FC = () => {
             <div className="p-6 border-t border-border bg-muted/20 flex justify-end">
               <button
                 onClick={() => setIsDetailsModalOpen(false)}
-                className="px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-xl transition-colors font-medium"
+                className="px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-lg transition-colors font-medium"
               >
                 Close
               </button>
@@ -216,7 +216,7 @@ const UserManagement: React.FC = () => {
 
       {isDeleteModalOpen && selectedUser && createPortal(
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-card w-full max-w-md rounded-2xl shadow-xl overflow-hidden animate-in zoom-in-95">
+          <div className="bg-card w-full max-w-md rounded-lg shadow-[0_20px_60px_hsl(222_38%_9%/0.18)] overflow-hidden animate-in zoom-in-95">
             <div className="flex justify-between items-center p-6 border-b border-border">
               <h3 className="text-xl font-bold text-destructive flex items-center gap-2">
                 <ShieldAlert className="w-5 h-5" /> Confirm Deletion
@@ -236,13 +236,13 @@ const UserManagement: React.FC = () => {
             <div className="p-6 border-t border-border bg-muted/20 flex justify-end gap-3">
               <button
                 onClick={() => setIsDeleteModalOpen(false)}
-                className="px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-xl transition-colors font-medium"
+                className="px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-lg transition-colors font-medium"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteUser}
-                className="px-4 py-2 bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl transition-colors font-medium"
+                className="px-4 py-2 bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-lg transition-colors font-medium"
               >
                 Delete Permanently
               </button>

@@ -106,7 +106,7 @@ export function NotificationsPage() {
       {isLoading && (
         <div className="space-y-2">
           {Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton key={i} className="h-16 rounded-xl" />
+            <Skeleton key={i} className="h-16 rounded-lg" />
           ))}
         </div>
       )}
@@ -140,7 +140,7 @@ export function NotificationsPage() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.03 }}
                   className={cn(
-                    "flex items-start gap-3 rounded-xl border p-4 transition-colors",
+                    "flex items-start gap-3 rounded-lg border p-4 transition-colors",
                     notif.read
                       ? "border-border bg-card"
                       : "border-primary/20 bg-primary/5"

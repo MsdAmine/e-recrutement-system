@@ -60,7 +60,7 @@ const AdminProfilePage: React.FC = () => {
       </div>
 
       {message && (
-        <div className={`p-4 rounded-xl flex items-center gap-3 ${
+        <div className={`p-4 rounded-lg flex items-center gap-3 ${
           message.type === "success" ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive"
         }`}>
           {message.type === "success" ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
@@ -79,7 +79,7 @@ const AdminProfilePage: React.FC = () => {
               value={formData.firstName}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 bg-muted/30 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="w-full px-4 py-2 bg-muted/30 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
           </div>
           <div className="space-y-2">
@@ -91,7 +91,7 @@ const AdminProfilePage: React.FC = () => {
               value={formData.lastName}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 bg-muted/30 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="w-full px-4 py-2 bg-muted/30 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
           </div>
         </div>
@@ -106,7 +106,7 @@ const AdminProfilePage: React.FC = () => {
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 bg-muted/30 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full px-4 py-2 bg-muted/30 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
         </div>
 
@@ -123,7 +123,7 @@ const AdminProfilePage: React.FC = () => {
               value={formData.currentPassword}
               onChange={handleChange}
               placeholder="Enter current password to authorize changes"
-              className="w-full px-4 py-2 bg-muted/30 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="w-full px-4 py-2 bg-muted/30 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
           </div>
 
@@ -135,7 +135,7 @@ const AdminProfilePage: React.FC = () => {
                 type="password"
                 value={formData.newPassword}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-muted/30 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="w-full px-4 py-2 bg-muted/30 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
               />
             </div>
             <div className="space-y-2">
@@ -145,7 +145,7 @@ const AdminProfilePage: React.FC = () => {
                 type="password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-muted/30 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="w-full px-4 py-2 bg-muted/30 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
               />
             </div>
           </div>
@@ -154,7 +154,7 @@ const AdminProfilePage: React.FC = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-primary text-primary-foreground py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-all disabled:opacity-50"
+          className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-all disabled:opacity-50"
         >
           {loading ? "Saving Changes..." : <><Save className="w-5 h-5" /> Save Profile</>}
         </button>

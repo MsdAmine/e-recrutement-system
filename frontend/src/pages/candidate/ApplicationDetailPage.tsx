@@ -34,9 +34,9 @@ export function ApplicationDetailPage() {
   // Loading state: Display skeleton loaders while fetching data
   if (isLoading) {
     return (
-      <div className="max-w-2xl mx-auto space-y-4 animate-in">
+      <div className="mx-auto max-w-4xl space-y-4 animate-in">
         <Skeleton className="h-8 w-56" />
-        <Skeleton className="h-48 rounded-xl" />
+        <Skeleton className="h-48 rounded-lg" />
       </div>
     );
   }
@@ -44,7 +44,7 @@ export function ApplicationDetailPage() {
   // Validation state: Handle case where ID in URL is non-numeric or non-positive
   if (!isValidAppId) {
     return (
-      <div className="max-w-2xl mx-auto text-center py-12 animate-in">
+      <div className="mx-auto max-w-4xl py-12 text-center animate-in">
         <p className="text-muted-foreground">Invalid application URL.</p>
         <Button variant="outline" className="mt-4" asChild>
           <Link to="/candidate/applications">Back to Applications</Link>
@@ -63,7 +63,7 @@ export function ApplicationDetailPage() {
         : "Failed to load application details.";
 
     return (
-      <div className="max-w-2xl mx-auto animate-in">
+      <div className="mx-auto max-w-4xl animate-in">
         <ErrorDisplay
           title="Unable to load application"
           message={loadErrorMessage}
@@ -76,7 +76,7 @@ export function ApplicationDetailPage() {
   // Empty state: Handle case where application ID is valid but no data returned
   if (!app) {
     return (
-      <div className="max-w-2xl mx-auto text-center py-12 animate-in">
+      <div className="mx-auto max-w-4xl py-12 text-center animate-in">
         <p className="text-muted-foreground">Application not found.</p>
         <Button variant="outline" className="mt-4" asChild>
           <Link to="/candidate/applications">Back to Applications</Link>
@@ -86,7 +86,7 @@ export function ApplicationDetailPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto animate-in">
+    <div className="mx-auto max-w-4xl space-y-6 animate-in">
       {/* Navigation: Back link */}
       <Button variant="ghost" size="sm" className="mb-5 -ml-2" asChild>
         <Link to="/candidate/applications">
@@ -103,11 +103,11 @@ export function ApplicationDetailPage() {
          className="space-y-4"
        >
         {/* Main Application Card: Job Info & Status */}
-        <div className="rounded-xl border border-border bg-card p-6">
-          <div className="flex items-start justify-between gap-4 mb-4">
+        <div className="surface-card p-6">
+          <div className="mb-4 flex items-start justify-between gap-4">
             <div>
-              <h2 className="text-xl font-bold">{app.jobOfferTitle}</h2>
-              <p className="text-sm text-muted-foreground mt-0.5">Job Offer #{app.jobOfferId}</p>
+              <h2>{app.jobOfferTitle}</h2>
+              <p className="mt-1 text-sm text-muted-foreground">Job Offer #{app.jobOfferId}</p>
             </div>
             <ApplicationStatusBadge status={app.status} />
           </div>
@@ -115,31 +115,31 @@ export function ApplicationDetailPage() {
           <Separator className="mb-4" />
 
           {/* Quick details grid (Date & Status label) */}
-          <div className="grid grid-cols-2 gap-4 text-sm">
+          <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
             <div className="flex items-center gap-2 text-muted-foreground">
               <CalendarIcon className="h-4 w-4" />
               <div>
                 <p className="text-xs">Applied at</p>
-                <p className="text-foreground font-medium">{formatDateTime(app.appliedAt)}</p>
+                <p className="font-medium text-foreground">{formatDateTime(app.appliedAt)}</p>
               </div>
             </div>
             <div className="flex items-center gap-2 text-muted-foreground">
               <BriefcaseIcon className="h-4 w-4" />
               <div>
                 <p className="text-xs">Status</p>
-                <p className="text-foreground font-medium capitalize">{app.status.replace("_", " ")}</p>
+                <p className="font-medium capitalize text-foreground">{app.status.replace("_", " ")}</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Content Section: Cover Letter Display */}
-        <div className="rounded-xl border border-border bg-card p-6">
-          <div className="flex items-center gap-2 mb-3">
+        <div className="surface-card p-6">
+          <div className="mb-3 flex items-center gap-2">
             <AlignLeftIcon className="h-4 w-4 text-muted-foreground" />
             <h3 className="font-semibold text-sm">Your Cover Letter</h3>
           </div>
-          <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
+          <p className="whitespace-pre-line text-sm leading-7 text-muted-foreground">
             {app.coverLetter}
           </p>
         </div>

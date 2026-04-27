@@ -27,10 +27,10 @@ export function RecruiterDashboardPage() {
   });
 
   return (
-    <div className="max-w-5xl mx-auto animate-in">
+    <div className="page-shell animate-in">
       <PageHeader
         title={`Welcome, ${user?.firstName}`}
-        description="Your recruitment pipeline at a glance."
+        description="Monitor job performance, application flow, and the next hiring actions."
         action={
           <Button asChild size="sm">
             <Link to="/recruiter/job-offers/new">
@@ -41,18 +41,18 @@ export function RecruiterDashboardPage() {
         }
       />
 
-      <div className="mb-4">
-        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
+      <section>
+        <p className="kicker mb-3">
           Job Offers
         </p>
         {isLoading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
             {Array.from({ length: 3 }).map((_, i) => (
-              <Skeleton key={i} className="h-24 rounded-xl" />
+              <Skeleton key={i} className="h-24 rounded-lg" />
             ))}
           </div>
         ) : dashboard ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
             <StatCard
               label="Total Offers"
               value={dashboard.totalJobOffers}
@@ -73,20 +73,20 @@ export function RecruiterDashboardPage() {
             />
           </div>
         ) : null}
-      </div>
+      </section>
 
-      <div className="mb-8">
-        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
+      <section>
+        <p className="kicker mb-3">
           Applications Received
         </p>
         {isLoading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="h-24 rounded-xl" />
+              <Skeleton key={i} className="h-24 rounded-lg" />
             ))}
           </div>
         ) : dashboard ? (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             <StatCard
               label="Total"
               value={dashboard.totalApplicationsReceived}
@@ -113,7 +113,7 @@ export function RecruiterDashboardPage() {
             />
           </div>
         ) : null}
-      </div>
+      </section>
 
       <motion.div
         initial={{ opacity: 0, y: 16 }}
@@ -121,10 +121,10 @@ export function RecruiterDashboardPage() {
         transition={{ delay: 0.2 }}
         className="surface-card p-5"
       >
-        <h2 className="font-semibold text-sm tracking-wide uppercase text-muted-foreground mb-4">
+        <h2 className="section-title mb-4">
           Quick Actions
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {[
             {
               label: "Post a Job",
@@ -148,19 +148,18 @@ export function RecruiterDashboardPage() {
             <Link
               key={item.href}
               to={item.href}
-              className="group relative overflow-hidden flex items-center gap-3 p-3.5 rounded-xl border border-border/80 bg-card/60 hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-md transition-all duration-200"
+              className="group flex items-center gap-3 rounded-lg border border-border/80 bg-card/90 p-3.5 shadow-[0_1px_2px_hsl(222_38%_9%/0.035)] transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-[0_10px_24px_hsl(222_38%_9%/0.075)]"
             >
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-              <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/20">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary ring-1 ring-primary/20">
                 {item.icon}
               </div>
-              <div className="relative flex-1">
-                <p className="text-sm font-medium group-hover:text-primary transition-colors">
+              <div className="flex-1">
+                <p className="text-sm font-medium transition-colors group-hover:text-primary">
                   {item.label}
                 </p>
                 <p className="text-xs text-muted-foreground">{item.description}</p>
               </div>
-              <ArrowRightIcon className="relative h-3.5 w-3.5 text-muted-foreground opacity-0 -translate-x-1 group-hover:translate-x-0 group-hover:opacity-100 transition-all" />
+              <ArrowRightIcon className="h-3.5 w-3.5 -translate-x-1 text-muted-foreground opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
             </Link>
           ))}
         </div>

@@ -131,7 +131,7 @@ export function LandingPage() {
             {stats.map((stat) => (
               <div
                 key={stat.label}
-                className="rounded-xl border border-border/70 bg-card/75 backdrop-blur-sm px-4 py-4 shadow-sm"
+                className="rounded-lg border border-border/70 bg-card/75 backdrop-blur-sm px-4 py-4 shadow-sm"
               >
                 <div className="text-2xl sm:text-3xl font-bold tracking-tight">{stat.value}</div>
                 <div className="text-xs sm:text-sm text-muted-foreground mt-1">{stat.label}</div>
@@ -165,7 +165,7 @@ export function LandingPage() {
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeUp}
-                className="group relative overflow-hidden rounded-2xl border border-border/80 bg-card p-6 shadow-sm hover:border-primary/35 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200"
+                className="group relative overflow-hidden rounded-lg border border-border/80 bg-card p-6 shadow-sm hover:border-primary/35 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200"
               >
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                 <div className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary mb-4 ring-1 ring-primary/20">
@@ -188,7 +188,7 @@ export function LandingPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="rounded-2xl border border-border/80 bg-card/80 p-10 shadow-sm"
+            className="rounded-lg border border-border/80 bg-card/80 p-10 shadow-sm"
           >
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
               Ready to take the next step?

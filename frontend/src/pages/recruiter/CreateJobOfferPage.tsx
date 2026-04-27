@@ -71,7 +71,7 @@ export function CreateJobOfferPage() {
   });
 
   return (
-    <div className="max-w-2xl mx-auto animate-in">
+    <div className="mx-auto max-w-4xl space-y-6 animate-in">
       <Button variant="ghost" size="sm" className="mb-5 -ml-2" asChild>
         <Link to="/recruiter/job-offers">
           <ArrowLeftIcon className="h-4 w-4" />
@@ -81,13 +81,13 @@ export function CreateJobOfferPage() {
 
       <PageHeader title="Post a New Job" description="Create a job offer and start receiving applications" />
 
-      <div className="rounded-xl border border-border bg-card p-6">
+      <div className="surface-card p-6">
         <form onSubmit={handleSubmit((v) => mutation.mutate(v))} className="space-y-5">
           <FormField label="Job Title" error={errors.title?.message} required>
             <Input id="create-job-title" placeholder="e.g. Java Backend Developer" {...register("title")} />
           </FormField>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormField label="Contract Type" error={errors.contractType?.message} required>
               <Controller
                 name="contractType"
@@ -95,7 +95,7 @@ export function CreateJobOfferPage() {
                 render={({ field }) => (
                   <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger id="create-job-contract">
-                      <SelectValue placeholder="Select type…" />
+                      <SelectValue placeholder="Select type..." />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="CDI">Permanent (CDI)</SelectItem>
@@ -118,7 +118,7 @@ export function CreateJobOfferPage() {
             <Input id="create-job-salary" type="number" placeholder="e.g. 12000" {...register("salary")} />
           </FormField>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormField label="Required Skills (comma-separated)" error={errors.requiredSkills?.message}>
               <Input id="create-job-required-skills" placeholder="Java, Spring Boot, PostgreSQL" {...register("requiredSkills")} />
             </FormField>
@@ -130,13 +130,13 @@ export function CreateJobOfferPage() {
           <FormField label="Job Description" error={errors.description?.message} required>
             <Textarea
               id="create-job-description"
-              placeholder="Describe the role, responsibilities, and requirements…"
+              placeholder="Describe the role, responsibilities, and requirements..."
               className="min-h-[160px]"
               {...register("description")}
             />
           </FormField>
 
-          <div className="flex items-center gap-3 p-4 rounded-lg bg-muted/50 border border-border">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-muted/45 p-4">
             <Controller
               name="active"
               control={control}
@@ -156,7 +156,7 @@ export function CreateJobOfferPage() {
           </div>
 
           {mutation.isError && (
-            <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2.5 text-sm text-destructive">
+            <div className="rounded-md border border-destructive/20 bg-destructive/10 px-3 py-2.5 text-sm text-destructive">
               Failed to create job offer. Please try again.
             </div>
           )}

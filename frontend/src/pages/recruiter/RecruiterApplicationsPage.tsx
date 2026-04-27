@@ -105,7 +105,7 @@ export function RecruiterApplicationsPage() {
   });
 
   return (
-    <div className="max-w-4xl mx-auto animate-in">
+    <div className="mx-auto max-w-5xl space-y-6 animate-in">
       <PageHeader
         title="All Applications"
         description={data ? `${data.totalElements} application${data.totalElements !== 1 ? "s" : ""}` : ""}
@@ -128,7 +128,7 @@ export function RecruiterApplicationsPage() {
       {isLoading && (
         <div className="space-y-3">
           {Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton key={i} className="h-24 rounded-xl" />
+            <Skeleton key={i} className="h-24 rounded-lg" />
           ))}
         </div>
       )}
@@ -157,12 +157,12 @@ export function RecruiterApplicationsPage() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.04 }}
-                  className="rounded-xl border border-border bg-card p-5 space-y-3"
+                  className="space-y-4 rounded-lg border border-border/80 bg-card/95 p-5 shadow-[0_1px_2px_hsl(222_38%_9%/0.04),0_8px_22px_hsl(222_38%_9%/0.035)] transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-[0_2px_4px_hsl(222_38%_9%/0.055),0_14px_34px_hsl(222_38%_9%/0.075)]"
                 >
-                  <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold truncate">{app.jobOfferTitle}</h3>
-                      <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
+                      <h3 className="truncate font-semibold">{app.jobOfferTitle}</h3>
+                      <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <MailIcon className="h-3 w-3" />
                           {app.candidateEmail}
@@ -177,7 +177,7 @@ export function RecruiterApplicationsPage() {
                   </div>
 
                   {/* Status update */}
-                  <div className="flex items-center gap-2 pt-1 border-t border-border/50">
+                  <div className="flex flex-wrap items-center gap-2 border-t border-border/60 pt-3">
                     <span className="text-xs text-muted-foreground">Update status:</span>
                     <Select
                       value={app.status}

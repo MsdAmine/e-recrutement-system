@@ -51,10 +51,10 @@ export function CandidateDashboardPage() {
   const profileCompleteness = profile ? Math.round((completedFields / 10) * 100) : 0;
 
   return (
-    <div className="max-w-5xl mx-auto animate-in">
+    <div className="page-shell animate-in">
       <PageHeader
         title={`Welcome back, ${user?.firstName}`}
-        description="Here's a summary of your recruitment activity."
+        description="Track applications, improve your profile, and jump back into matching opportunities."
         action={
           <Button asChild size="sm">
             <Link to="/candidate/jobs">
@@ -66,13 +66,13 @@ export function CandidateDashboardPage() {
       />
 
       {isLoading ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
           {Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton key={i} className="h-24 rounded-xl" />
+            <Skeleton key={i} className="h-24 rounded-lg" />
           ))}
         </div>
       ) : dashboard ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
           <StatCard
             label="Total Applied"
             value={dashboard.totalApplications}
@@ -106,27 +106,27 @@ export function CandidateDashboardPage() {
         </div>
       ) : null}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="lg:col-span-1 surface-card p-5"
+          className="surface-card p-5 lg:col-span-1"
         >
-          <div className="flex items-center justify-between gap-2 mb-4">
-            <h2 className="font-semibold text-sm tracking-wide uppercase text-muted-foreground">
+          <div className="mb-4 flex items-center justify-between gap-2">
+            <h2 className="section-title">
               Profile Completeness
             </h2>
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/10 text-primary ring-1 ring-primary/15">
               <UserIcon className="h-4 w-4" />
             </div>
           </div>
-          <div className="flex items-end justify-between mb-2">
-            <span className="text-3xl font-bold tracking-tight">{profileCompleteness}%</span>
+          <div className="mb-2 flex items-end justify-between">
+            <span className="text-3xl font-semibold tracking-tight">{profileCompleteness}%</span>
             <span className="text-xs text-muted-foreground">of 10 fields</span>
           </div>
           <Progress value={profileCompleteness} className="mb-4" />
-          <p className="text-xs text-muted-foreground mb-4">
+          <p className="mb-4 text-sm leading-6 text-muted-foreground">
             {profileCompleteness < 100
               ? "Complete your profile to stand out to recruiters."
               : "Your profile is complete."}
@@ -143,12 +143,12 @@ export function CandidateDashboardPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="lg:col-span-2 surface-card p-5"
+          className="surface-card p-5 lg:col-span-2"
         >
-          <h2 className="font-semibold text-sm tracking-wide uppercase text-muted-foreground mb-4">
+          <h2 className="section-title mb-4">
             Quick Actions
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {[
               {
                 label: "My Applications",
@@ -172,14 +172,13 @@ export function CandidateDashboardPage() {
               <Link
                 key={item.href}
                 to={item.href}
-                className="group relative overflow-hidden flex items-center gap-3 p-3.5 rounded-xl border border-border/80 bg-card/60 hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-md transition-all duration-200"
+                className="group flex items-center gap-3 rounded-lg border border-border/80 bg-card/90 p-3.5 shadow-[0_1px_2px_hsl(222_38%_9%/0.035)] transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-[0_10px_24px_hsl(222_38%_9%/0.075)]"
               >
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/20">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary ring-1 ring-primary/20">
                   {item.icon}
                 </div>
-                <div className="relative">
-                  <p className="text-sm font-medium group-hover:text-primary transition-colors">
+                <div>
+                  <p className="text-sm font-medium transition-colors group-hover:text-primary">
                     {item.label}
                   </p>
                   <p className="text-xs text-muted-foreground">{item.description}</p>

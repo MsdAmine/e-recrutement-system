@@ -96,41 +96,43 @@ export function JobOffersPage() {
   const isError = publicOffersQuery.isError;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-      <div className="text-center mb-10">
-        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1.5 text-xs font-medium text-primary">
-          <SparklesIcon className="h-3.5 w-3.5" />
-          {isCandidateView ? "Smart Matching Recommendations" : "Curated Opportunities"}
+    <div className="mx-auto w-full max-w-6xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
+      <div className="flex flex-col gap-5 border-b border-border/70 pb-6 lg:flex-row lg:items-end lg:justify-between">
+        <div className="max-w-2xl">
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+            <SparklesIcon className="h-3.5 w-3.5" />
+            {isCandidateView ? "Smart matching enabled" : "Curated opportunities"}
+          </div>
+          <h1>{isCandidateView ? "Recommended jobs" : "Browse opportunities"}</h1>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            {isCandidateView
+              ? `${publicOffersQuery.data?.totalElements ?? "-"} active job offers with your strongest matches highlighted.`
+              : `${publicOffersQuery.data?.totalElements ?? "-"} active job offers from hiring teams.`}
+          </p>
         </div>
-        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-3">
-          {isCandidateView ? "Recommended Jobs For You" : "Browse Opportunities"}
-        </h1>
-        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-          {isCandidateView
-            ? `Discover ${publicOffersQuery.data?.totalElements ?? "-"} active job offers. We've highlighted your best matches!`
-            : `Discover ${publicOffersQuery.data?.totalElements ?? "-"} active job offers from top companies.`}
-        </p>
-      </div>
 
-      <div className="relative max-w-xl mx-auto mb-10">
-        <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-        <Input
-          id="jobs-search"
-          type="text"
-          placeholder="Search by title or location..."
-          className="pl-10 h-11 rounded-xl bg-card/90 border-border/80 shadow-sm focus-visible:ring-primary/40"
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setPage(0);
-          }}
-        />
+        <div className="w-full lg:w-[360px]">
+          <div className="relative">
+            <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              id="jobs-search"
+              type="text"
+              placeholder="Search title or location"
+              className="h-10 pl-9"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(0);
+              }}
+            />
+          </div>
+        </div>
       </div>
 
       {isLoading && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="rounded-xl border border-border bg-card p-5 space-y-3">
+            <div key={i} className="space-y-3 rounded-lg border border-border/80 bg-card/95 p-5 shadow-[0_1px_2px_hsl(222_38%_9%/0.04),0_8px_22px_hsl(222_38%_9%/0.035)]">
               <Skeleton className="h-5 w-3/4" />
               <Skeleton className="h-4 w-1/2" />
               <Skeleton className="h-4 w-full" />
@@ -156,7 +158,7 @@ export function JobOffersPage() {
               description={isCandidateView ? "Try updating your profile skills and preferences." : "Try adjusting your search or check back later."}
             />
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {paginatedCards.map((offer, i) => (
                 <motion.article
                   key={offer.id}
@@ -164,26 +166,24 @@ export function JobOffersPage() {
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ y: -3 }}
                   transition={{ delay: i * 0.04, duration: 0.35 }}
-                  className="surface-card surface-card-hover group relative overflow-hidden p-5 flex flex-col"
+                  className="surface-card surface-card-hover group flex flex-col p-5"
                 >
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-
-                  <div className="relative flex items-start gap-3 mb-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/20">
+                  <div className="mb-4 flex items-start gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary ring-1 ring-primary/20">
                       <BuildingIcon className="h-5 w-5" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h2 className="font-semibold text-base leading-tight truncate group-hover:text-primary transition-colors">
+                      <h2 className="truncate text-base font-semibold leading-tight transition-colors group-hover:text-primary">
                         {offer.title}
                       </h2>
-                      <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                      <p className="mt-1 truncate text-xs text-muted-foreground">
                         {isCandidateView ? "Personalized recommendation" : offer.recruiterEmail}
                       </p>
                     </div>
                   </div>
 
                   {offer.match && (
-                    <div className="relative mb-3">
+                    <div className="mb-3">
                       <Badge
                         className={`gap-1 border ${getMatchBadgeClass(offer.match.score)}`}
                         title="Includes semantic matching of your experience and job description"
@@ -201,11 +201,11 @@ export function JobOffersPage() {
                     </div>
                   )}
 
-                  <p className="relative text-sm text-muted-foreground leading-relaxed line-clamp-2 mb-4 flex-1">
+                  <p className="mb-4 line-clamp-2 flex-1 text-sm leading-6 text-muted-foreground">
                     {offer.description}
                   </p>
 
-                  <div className="relative flex flex-wrap gap-2 mb-4">
+                  <div className="mb-4 flex flex-wrap gap-2">
                     <Badge variant="secondary" className="gap-1">
                       <MapPinIcon className="h-3 w-3" />
                       {offer.location}
@@ -222,7 +222,7 @@ export function JobOffersPage() {
                   </div>
 
                   {offer.match && (
-                    <div className="relative mb-4 rounded-lg border border-border/70 bg-muted/30 p-3">
+                    <div className="mb-4 rounded-lg border border-border/75 bg-muted/35 p-3 shadow-inner shadow-slate-950/[0.02]">
                       <p className="text-sm font-medium">Why this matches</p>
                       <div className="mt-3 space-y-2">
                         {offer.match.explanations.slice(0, 3).map((explanation) => (
@@ -245,8 +245,8 @@ export function JobOffersPage() {
                     </div>
                   )}
 
-                  <div className="relative flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground flex items-center gap-1">
+                  <div className="flex items-center justify-between border-t border-border/60 pt-4">
+                    <span className="flex items-center gap-1 text-xs text-muted-foreground">
                       <CalendarIcon className="h-3 w-3" />
                       {offer.createdAt ? formatDate(offer.createdAt) : "Ranked recommendation"}
                     </span>

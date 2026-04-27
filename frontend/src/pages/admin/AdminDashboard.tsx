@@ -41,13 +41,13 @@ const AdminDashboard: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {statCards.map((card, idx) => (
-          <div key={idx} className="surface-card p-6 flex items-center space-x-4">
-            <div className={`p-4 rounded-xl ${card.bg}`}>
+          <div key={idx} className="surface-card surface-card-hover p-6 flex items-center space-x-4">
+            <div className={`p-4 rounded-lg shadow-sm ring-1 ring-inset ring-border/50 ${card.bg}`}>
               <card.icon className={`w-6 h-6 ${card.color}`} />
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">{card.title}</p>
-              <h3 className="text-2xl font-bold text-foreground">{card.value}</h3>
+              <p className="text-sm font-semibold text-muted-foreground">{card.title}</p>
+              <h3 className="text-2xl font-semibold tracking-tight text-foreground">{card.value}</h3>
             </div>
           </div>
         ))}

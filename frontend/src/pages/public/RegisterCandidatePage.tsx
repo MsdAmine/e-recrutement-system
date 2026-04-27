@@ -75,14 +75,14 @@ export function RegisterCandidatePage() {
         className="w-full max-w-sm"
       >
         <div className="flex flex-col items-center mb-8">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground mb-4">
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-[0_1px_2px_hsl(var(--primary)/0.25),0_12px_24px_hsl(var(--primary)/0.18)]">
             <UserIcon className="h-6 w-6" />
           </div>
           <h1 className="text-2xl font-bold">Create your account</h1>
           <p className="text-muted-foreground text-sm mt-1">Join as a candidate and start applying</p>
         </div>
 
-        <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+        <div className="surface-card p-6">
           <form onSubmit={handleSubmit((v) => mutation.mutate(v))} className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <FormField label="First Name" error={errors.firstName?.message} required>
@@ -103,14 +103,14 @@ export function RegisterCandidatePage() {
             <FormField label="Password" error={errors.password?.message} required>
               <div className="relative">
                 <LockIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-                <Input id="reg-c-password" type="password" placeholder="••••••••" className="pl-9" {...register("password")} />
+                <Input id="reg-c-password" type="password" placeholder="********" className="pl-9" {...register("password")} />
               </div>
             </FormField>
 
             <FormField label="Confirm Password" error={errors.confirmPassword?.message} required>
               <div className="relative">
                 <LockIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-                <Input id="reg-c-confirm" type="password" placeholder="••••••••" className="pl-9" {...register("confirmPassword")} />
+                <Input id="reg-c-confirm" type="password" placeholder="********" className="pl-9" {...register("confirmPassword")} />
               </div>
             </FormField>
 
@@ -129,7 +129,7 @@ export function RegisterCandidatePage() {
         <p className="text-center text-sm text-muted-foreground mt-6">
           Already have an account?{" "}
           <Link to="/login" className="text-foreground font-medium hover:underline">Sign in</Link>
-          {" · "}
+          {" / "}
           <Link to="/register/recruiter" className="text-foreground font-medium hover:underline">Recruiter?</Link>
         </p>
       </motion.div>

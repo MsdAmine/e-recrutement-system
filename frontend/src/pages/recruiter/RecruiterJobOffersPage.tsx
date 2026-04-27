@@ -68,7 +68,7 @@ export function RecruiterJobOffersPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto animate-in">
+    <div className="mx-auto max-w-5xl space-y-6 animate-in">
       <PageHeader
         title="My Job Offers"
         description={data ? `${data.totalElements} offer${data.totalElements !== 1 ? "s" : ""}` : ""}
@@ -85,7 +85,7 @@ export function RecruiterJobOffersPage() {
       {isLoading && (
         <div className="space-y-3">
           {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-28 rounded-xl" />
+            <Skeleton key={i} className="h-28 rounded-lg" />
           ))}
         </div>
       )}
@@ -125,18 +125,18 @@ export function RecruiterJobOffersPage() {
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.04 }}
-                  className="rounded-xl border border-border bg-card p-5 hover:border-primary/30 transition-colors"
+                  className="rounded-lg border border-border/80 bg-card/95 p-5 shadow-[0_1px_2px_hsl(222_38%_9%/0.04),0_8px_22px_hsl(222_38%_9%/0.035)] transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-[0_2px_4px_hsl(222_38%_9%/0.055),0_14px_34px_hsl(222_38%_9%/0.075)]"
                 >
-                  <div className="flex items-start justify-between gap-4">
+                  <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-semibold truncate">{offer.title}</h3>
+                      <div className="mb-1 flex items-center gap-2">
+                        <h3 className="truncate font-semibold">{offer.title}</h3>
                         <Badge variant={offer.active ? "success" : "secondary"}>
                           {offer.active ? "Active" : "Inactive"}
                         </Badge>
                       </div>
 
-                      <div className="flex flex-wrap gap-3 text-xs text-muted-foreground mt-2">
+                      <div className="mt-2 flex flex-wrap gap-3 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <MapPinIcon className="h-3 w-3" />
                           {offer.location}
@@ -158,7 +158,7 @@ export function RecruiterJobOffersPage() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex shrink-0 flex-wrap items-center gap-2">
                       <Button size="sm" variant="outline" asChild>
                         <Link to={`/recruiter/applications/job-offers/${offer.id}`}>
                           <UsersIcon className="h-3.5 w-3.5" />

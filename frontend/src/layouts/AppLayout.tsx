@@ -14,8 +14,8 @@ export function AppLayout() {
   const navigate = useNavigate();
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-    const isRecruiter = user?.role === "ROLE_RECRUITER";
-    const isAdmin = user?.role === "ROLE_ADMIN";
+  const isRecruiter = user?.role === "ROLE_RECRUITER";
+  const isAdmin = user?.role === "ROLE_ADMIN";
   const notificationsHref = isRecruiter
     ? "/recruiter/notifications"
     : (isAdmin ? "/admin/dashboard" : "/candidate/notifications");
@@ -33,7 +33,7 @@ export function AppLayout() {
       {/* Mobile sidebar drawer */}
       <AppSidebar
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-60 transform transition-transform duration-200 lg:hidden",
+          "fixed inset-y-0 left-0 z-50 flex w-64 transform transition-transform duration-200 lg:hidden",
           mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
         onNavigate={() => setMobileSidebarOpen(false)}
@@ -50,17 +50,17 @@ export function AppLayout() {
       {/* Main content */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Top bar (mobile only) */}
-        <header className="lg:hidden flex h-14 items-center justify-between px-4 border-b border-border bg-card">
+        <header className="flex h-14 items-center justify-between border-b border-border/80 bg-card/95 px-4 shadow-sm shadow-slate-950/[0.03] backdrop-blur lg:hidden">
           <button
             onClick={() => setMobileSidebarOpen(true)}
-            className="p-1.5 text-muted-foreground hover:text-foreground"
+            className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
             aria-label="Open menu"
           >
             <MenuIcon className="h-5 w-5" />
           </button>
 
           <Link to="/" className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
               <BriefcaseIcon className="h-4 w-4" />
             </div>
             <span className="font-bold text-sm">TalentBridge</span>
@@ -80,7 +80,7 @@ export function AppLayout() {
         </header>
 
         {/* Desktop top bar */}
-        <header className="hidden lg:flex h-14 items-center justify-end px-6 border-b border-border bg-card/50">
+        <header className="hidden h-14 items-center justify-end border-b border-border/80 bg-card/85 px-6 shadow-sm shadow-slate-950/[0.03] backdrop-blur lg:flex">
           <div className="flex items-center gap-3">
             <ThemeToggle />
             <Button variant="ghost" size="icon" asChild>
@@ -93,7 +93,7 @@ export function AppLayout() {
               className="flex items-center gap-2 hover:opacity-80 transition-opacity"
             >
               <Avatar className="h-7 w-7">
-                <AvatarFallback className="text-xs bg-primary/10 text-primary">
+                <AvatarFallback className="bg-primary/10 text-xs text-primary">
                   {user ? getInitials(user.firstName, user.lastName) : "?"}
                 </AvatarFallback>
               </Avatar>
@@ -103,7 +103,7 @@ export function AppLayout() {
         </header>
 
         {/* Page content */}
-        <main className={cn("flex-1 overflow-y-auto p-6")}>
+        <main className={cn("flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8")}>
           <Outlet />
         </main>
       </div>

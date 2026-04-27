@@ -88,7 +88,7 @@ export function JobOfferDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-12 space-y-4">
+      <div className="mx-auto max-w-4xl space-y-4 px-4 py-10">
         <Skeleton className="h-8 w-2/3" />
         <Skeleton className="h-5 w-1/2" />
         <Skeleton className="h-40 w-full" />
@@ -116,7 +116,7 @@ export function JobOfferDetailPage() {
         : "Failed to load this job offer.";
 
     return (
-      <div className="mx-auto max-w-3xl px-4 py-12">
+      <div className="mx-auto max-w-4xl px-4 py-10">
         <ErrorDisplay
           title="Unable to load job offer"
           message={loadErrorMessage}
@@ -133,7 +133,7 @@ export function JobOfferDetailPage() {
 
   if (!offer) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-12 text-center">
+      <div className="mx-auto max-w-4xl px-4 py-10 text-center">
         <p className="text-muted-foreground">Job offer not found.</p>
         <Button variant="outline" className="mt-4" onClick={() => navigate(jobsPath)}>
           Back to Jobs
@@ -143,9 +143,10 @@ export function JobOfferDetailPage() {
   }
 
   const isCandidate = isAuthenticated && user?.role === "ROLE_CANDIDATE";
+  const showApplyPanel = applied || isCandidate || !isAuthenticated;
 
   return (
-    <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
+    <div className="mx-auto w-full max-w-5xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
       <Button variant="ghost" size="sm" className="mb-6 -ml-2" asChild>
         <Link to={isAuthenticated ? jobsPath : "/jobs"}>
           <ArrowLeftIcon className="h-4 w-4" />
@@ -157,54 +158,58 @@ export function JobOfferDetailPage() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
+        className={showApplyPanel ? "grid gap-5 lg:grid-cols-[1fr_320px]" : "space-y-5"}
       >
-        {/* Header card */}
-        <div className="rounded-xl border border-border bg-card p-6 mb-5">
-          <div className="flex items-start gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-              <BuildingIcon className="h-7 w-7" />
-            </div>
-            <div className="flex-1">
-              <h1 className="text-2xl font-bold mb-1">{offer.title}</h1>
-              <p className="text-muted-foreground text-sm">{offer.recruiterEmail}</p>
-              <div className="flex flex-wrap gap-2 mt-3">
-                <Badge variant="secondary" className="gap-1">
-                  <MapPinIcon className="h-3 w-3" />
-                  {offer.location}
-                </Badge>
-                <Badge variant="outline">
-                  <BriefcaseIcon className="h-3 w-3 mr-1" />
-                  {getContractTypeLabel(offer.contractType)}
-                </Badge>
-                {offer.salary && (
-                  <Badge variant="outline" className="gap-1">
-                    <BanknoteIcon className="h-3 w-3" />
-                    {formatSalary(offer.salary)}
+        <div className="space-y-5">
+          <div className="surface-card p-6">
+            <div className="flex items-start gap-4">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/20">
+                <BuildingIcon className="h-7 w-7" />
+              </div>
+              <div className="flex-1">
+                <h1>{offer.title}</h1>
+                <p className="mt-1 text-sm text-muted-foreground">{offer.recruiterEmail}</p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <Badge variant="secondary" className="gap-1">
+                    <MapPinIcon className="h-3 w-3" />
+                    {offer.location}
                   </Badge>
-                )}
-                <Badge variant="outline" className="gap-1 text-muted-foreground">
-                  <CalendarIcon className="h-3 w-3" />
-                  Posted {formatDate(offer.createdAt)}
-                </Badge>
+                  <Badge variant="outline">
+                    <BriefcaseIcon className="mr-1 h-3 w-3" />
+                    {getContractTypeLabel(offer.contractType)}
+                  </Badge>
+                  {offer.salary && (
+                    <Badge variant="outline" className="gap-1">
+                      <BanknoteIcon className="h-3 w-3" />
+                      {formatSalary(offer.salary)}
+                    </Badge>
+                  )}
+                  <Badge variant="outline" className="gap-1 text-muted-foreground">
+                    <CalendarIcon className="h-3 w-3" />
+                    Posted {formatDate(offer.createdAt)}
+                  </Badge>
+                </div>
               </div>
             </div>
           </div>
+
+          <div className="surface-card p-6">
+            <h2 className="mb-3">Job Description</h2>
+            <p className="whitespace-pre-line text-sm leading-7 text-muted-foreground">
+              {offer.description}
+            </p>
+          </div>
         </div>
 
-        {/* Description */}
-        <div className="rounded-xl border border-border bg-card p-6 mb-5">
-          <h2 className="font-semibold mb-3">Job Description</h2>
-          <p className="text-muted-foreground leading-relaxed whitespace-pre-line text-sm">
-            {offer.description}
-          </p>
-        </div>
-
-        {/* Apply section */}
-        {applied ? (
-          <div className="rounded-xl border border-success/30 bg-success/10 p-6 text-center">
-            <div className="text-3xl mb-2">Success</div>
-            <h3 className="font-semibold text-success mb-1">Application Submitted!</h3>
-            <p className="text-sm text-muted-foreground mb-4">
+        {showApplyPanel && (
+        <aside className="lg:sticky lg:top-20 lg:self-start">
+          {applied ? (
+          <div className="rounded-lg border border-success/30 bg-success/10 p-6 text-center">
+            <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-md bg-success/15 text-success">
+              <SendIcon className="h-5 w-5" />
+            </div>
+            <h3 className="mb-1 font-semibold text-success">Application submitted</h3>
+            <p className="mb-4 text-sm leading-6 text-muted-foreground">
               Your application has been sent. Track it in your applications.
             </p>
             <Button size="sm" asChild>
@@ -212,10 +217,10 @@ export function JobOfferDetailPage() {
             </Button>
           </div>
         ) : isCandidate ? (
-          <div className="rounded-xl border border-border bg-card p-6">
-            <h2 className="font-semibold mb-4 flex items-center gap-2">
+          <div className="surface-card p-5">
+            <h2 className="mb-4 flex items-center gap-2 text-base">
               <SendIcon className="h-4 w-4" />
-              Apply for this Position
+              Apply for this position
             </h2>
             <form onSubmit={handleSubmit((v) => applyMutation.mutate(v))} className="space-y-4">
               <div className="space-y-1.5">
@@ -225,7 +230,7 @@ export function JobOfferDetailPage() {
                 <Textarea
                   id="cover-letter"
                   placeholder="Tell the recruiter why you're a great fit for this role..."
-                  className="min-h-[140px]"
+                  className="min-h-[180px]"
                   {...register("coverLetter")}
                 />
                 {errors.coverLetter && (
@@ -233,7 +238,7 @@ export function JobOfferDetailPage() {
                 )}
               </div>
               {applyError && (
-                <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2.5 text-sm text-destructive">
+                <div className="rounded-md border border-destructive/20 bg-destructive/10 px-3 py-2.5 text-sm text-destructive">
                   {applyError}
                 </div>
               )}
@@ -249,15 +254,17 @@ export function JobOfferDetailPage() {
             </form>
           </div>
         ) : !isAuthenticated ? (
-          <div className="rounded-xl border border-border bg-card p-6 text-center">
-            <p className="text-muted-foreground mb-4">
+          <div className="surface-card p-6 text-center">
+            <p className="mb-4 text-sm leading-6 text-muted-foreground">
               Sign in as a candidate to apply for this position.
             </p>
             <Button asChild>
               <Link to="/login">Sign In to Apply</Link>
             </Button>
           </div>
-        ) : null}
+          ) : null}
+        </aside>
+        )}
       </motion.div>
     </div>
   );

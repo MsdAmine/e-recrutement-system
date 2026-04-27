@@ -70,7 +70,7 @@ export function LoginPage() {
       >
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground mb-4">
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-[0_1px_2px_hsl(var(--primary)/0.25),0_12px_24px_hsl(var(--primary)/0.18)]">
             <BriefcaseIcon className="h-6 w-6" />
           </div>
           <h1 className="text-2xl font-bold">Welcome back</h1>
@@ -78,7 +78,7 @@ export function LoginPage() {
         </div>
 
         {/* Card */}
-        <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+        <div className="surface-card p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <FormField label="Email" error={errors.email?.message} required>
               <div className="relative">
@@ -100,7 +100,7 @@ export function LoginPage() {
                 <Input
                   id="login-password"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder="********"
                   className="pl-9"
                   autoComplete="current-password"
                   {...register("password")}
@@ -130,7 +130,7 @@ export function LoginPage() {
           <Link to="/register/candidate" className="text-foreground font-medium hover:underline">
             Register as Candidate
           </Link>
-          {" · "}
+          {" / "}
           <Link to="/register/recruiter" className="text-foreground font-medium hover:underline">
             Register as Recruiter
           </Link>

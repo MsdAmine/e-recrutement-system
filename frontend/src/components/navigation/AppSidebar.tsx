@@ -69,34 +69,25 @@ export function AppSidebar({ className, onNavigate }: AppSidebarProps) {
   return (
     <aside
       className={cn(
-        "w-60 shrink-0 flex-col h-screen border-r border-border bg-card",
+        "h-screen w-64 shrink-0 flex-col border-r border-border/80 bg-card/95 shadow-[1px_0_0_hsl(var(--border)/0.45),8px_0_28px_hsl(222_38%_9%/0.035)]",
         className ?? "hidden lg:flex sticky top-0"
       )}
     >
-      <div className="flex h-16 items-center gap-2.5 px-5 border-b border-border">
+      <div className="flex h-16 items-center gap-2.5 border-b border-border/80 px-5">
         <Link to="/" onClick={onNavigate} className="flex items-center gap-2.5 group">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-sm shadow-primary/20">
             <BriefcaseIcon className="h-4 w-4" />
           </div>
-          <span className="font-bold tracking-tight">TalentBridge</span>
+          <span className="font-semibold tracking-tight">TalentBridge</span>
         </Link>
       </div>
 
-      <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-0.5">
+      <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
         {navItems.map((item) => {
-          // --- THE FIX ---
-          // We check if the current path is an exact match.
-          // If it's NOT an exact match, we only allow "active" if the item 
-          // is NOT the parent of another specific nav item.
           const isExact = location.pathname === item.href;
-
-          // Logic: Highlight if it's an exact match OR if it's a sub-route 
-          // UNLESS the path is specifically the "new" job page while we are looking at the general list.
           let isActive = isExact;
 
           if (!isExact && location.pathname.startsWith(`${item.href}/`)) {
-            // If we are on /recruiter/job-offers/new, don't let /recruiter/job-offers catch it
-            // because "Post a Job" has its own specific entry.
             if (item.href === "/recruiter/job-offers" && location.pathname === "/recruiter/job-offers/new") {
               isActive = false;
             } else {
@@ -110,10 +101,10 @@ export function AppSidebar({ className, onNavigate }: AppSidebarProps) {
               to={item.href}
               onClick={onNavigate}
               className={cn(
-                "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors group",
+                "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200",
                 isActive
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                  ? "bg-primary text-primary-foreground shadow-[0_1px_2px_hsl(var(--primary)/0.25),0_8px_18px_hsl(var(--primary)/0.14)]"
+                  : "text-muted-foreground hover:bg-accent hover:text-foreground"
               )}
             >
               {item.icon}
@@ -130,18 +121,18 @@ export function AppSidebar({ className, onNavigate }: AppSidebarProps) {
         <Link
           to={isAdmin ? "/admin/dashboard" : (isRecruiter ? "/recruiter/profile" : "/candidate/profile")}
           onClick={onNavigate}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-accent transition-colors group"
+          className="group flex items-center gap-3 rounded-md px-3 py-2.5 transition-colors hover:bg-accent"
         >
           <Avatar className="h-8 w-8 shrink-0">
-            <AvatarFallback className="text-xs bg-primary/10 text-primary">
+            <AvatarFallback className="bg-primary/10 text-xs text-primary">
               {user ? getInitials(user.firstName, user.lastName) : "?"}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium leading-none truncate">
+            <p className="truncate text-sm font-medium leading-none">
               {user?.firstName} {user?.lastName}
             </p>
-            <p className="text-xs text-muted-foreground mt-0.5 truncate">
+            <p className="mt-1 truncate text-xs text-muted-foreground">
               {user?.email}
             </p>
           </div>
@@ -149,7 +140,7 @@ export function AppSidebar({ className, onNavigate }: AppSidebarProps) {
         <Button
           variant="ghost"
           size="sm"
-          className="w-full justify-start text-muted-foreground hover:text-destructive mt-1"
+          className="mt-1 w-full justify-start text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
           onClick={handleLogout}
         >
           <LogOutIcon className="h-4 w-4" />

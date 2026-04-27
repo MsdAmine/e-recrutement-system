@@ -1,7 +1,7 @@
 import * as React from "react";
+import { AlertTriangleIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// ── Form Field Wrapper ───────────────────────────────────
 interface FormFieldProps {
   label?: string;
   error?: string;
@@ -22,21 +22,20 @@ export function FormField({
   return (
     <div className={cn("space-y-1.5", className)}>
       {label && (
-        <label className="text-sm font-medium leading-none">
+        <label className="text-sm font-medium leading-none text-foreground">
           {label}
           {required && <span className="ml-1 text-destructive">*</span>}
         </label>
       )}
       {children}
       {description && !error && (
-        <p className="text-xs text-muted-foreground">{description}</p>
+        <p className="text-xs leading-5 text-muted-foreground">{description}</p>
       )}
-      {error && <p className="text-xs text-destructive">{error}</p>}
+      {error && <p className="text-xs leading-5 text-destructive">{error}</p>}
     </div>
   );
 }
 
-// ── Stat Card ────────────────────────────────────────────
 interface StatCardProps {
   label: string;
   value: number | string;
@@ -50,32 +49,30 @@ export function StatCard({ label, value, icon, className, colorClass }: StatCard
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-2xl border border-border/80 bg-card/90 p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5",
+        "group relative overflow-hidden rounded-lg border border-border/80 bg-card p-4 shadow-[0_1px_2px_hsl(222_38%_9%/0.05),0_10px_28px_hsl(222_38%_9%/0.045)] transition-all duration-200 before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-primary/25 before:to-transparent hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-[0_2px_4px_hsl(222_38%_9%/0.06),0_18px_44px_hsl(222_38%_9%/0.08)] dark:shadow-black/25",
         className
       )}
     >
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-      <div className="relative flex items-center gap-4">
+      <div className="relative flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <p className="text-[1.7rem] font-semibold leading-none tracking-tight text-foreground">{value}</p>
+          <p className="mt-2 text-sm font-medium leading-5 text-muted-foreground">{label}</p>
+        </div>
         {icon && (
           <div
             className={cn(
-              "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ring-1 ring-border/60 transition-transform duration-200 group-hover:scale-105",
+              "flex h-9 w-9 shrink-0 items-center justify-center rounded-md shadow-sm ring-1 ring-inset ring-border/70 transition-transform duration-200 group-hover:scale-105",
               colorClass ?? "bg-primary/10 text-primary"
             )}
           >
             {icon}
           </div>
         )}
-        <div>
-          <p className="text-2xl font-bold tracking-tight leading-none">{value}</p>
-          <p className="text-sm text-muted-foreground mt-1">{label}</p>
-        </div>
       </div>
     </div>
   );
 }
 
-// ── Page Header ──────────────────────────────────────────
 interface PageHeaderProps {
   title: string;
   description?: string;
@@ -85,19 +82,21 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, description, action, className }: PageHeaderProps) {
   return (
-    <div className={cn("flex items-start justify-between gap-4 mb-6", className)}>
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
-        {description && (
-          <p className="text-muted-foreground mt-1">{description}</p>
-        )}
+    <div
+      className={cn(
+        "flex flex-col gap-4 border-b border-border/80 pb-6 sm:flex-row sm:items-end sm:justify-between",
+        className
+      )}
+    >
+      <div className="max-w-2xl">
+        <h1>{title}</h1>
+        {description && <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>}
       </div>
       {action && <div className="shrink-0">{action}</div>}
     </div>
   );
 }
 
-// ── Empty State ──────────────────────────────────────────
 interface EmptyStateProps {
   icon?: React.ReactNode;
   title: string;
@@ -110,28 +109,22 @@ export function EmptyState({ icon, title, description, action, className }: Empt
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-muted/30 py-16 px-8 text-center",
+        "flex flex-col items-center justify-center rounded-lg border border-dashed border-border/90 bg-card/75 px-8 py-14 text-center shadow-inner shadow-slate-950/[0.025]",
         className
       )}
     >
-      {icon && (
-        <div className="mb-4 text-muted-foreground/50">{icon}</div>
-      )}
-      <h3 className="text-base font-semibold mb-1">{title}</h3>
-      {description && (
-        <p className="text-sm text-muted-foreground max-w-sm">{description}</p>
-      )}
-      {action && <div className="mt-4">{action}</div>}
+      {icon && <div className="mb-4 text-muted-foreground/60">{icon}</div>}
+      <h3 className="mb-1 text-base font-semibold">{title}</h3>
+      {description && <p className="max-w-sm text-sm leading-6 text-muted-foreground">{description}</p>}
+      {action && <div className="mt-5">{action}</div>}
     </div>
   );
 }
 
-// ── Loading Skeleton ─────────────────────────────────────
 export function Skeleton({ className }: { className?: string }) {
-  return <div className={cn("skeleton h-4 rounded", className)} />;
+  return <div className={cn("skeleton h-4 rounded-md", className)} />;
 }
 
-// ── Error Display ────────────────────────────────────────
 interface ErrorDisplayProps {
   title?: string;
   message?: string;
@@ -144,14 +137,16 @@ export function ErrorDisplay({
   onRetry,
 }: ErrorDisplayProps) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-xl border border-destructive/20 bg-destructive/5 py-12 px-6 text-center">
-      <div className="mb-3 text-destructive text-3xl">⚠</div>
+    <div className="flex flex-col items-center justify-center rounded-lg border border-destructive/25 bg-destructive/5 px-6 py-12 text-center shadow-sm shadow-destructive/5">
+      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-md bg-destructive/10 text-destructive">
+        <AlertTriangleIcon className="h-5 w-5" />
+      </div>
       <h3 className="text-base font-semibold text-destructive">{title}</h3>
-      <p className="text-sm text-muted-foreground mt-1 mb-4 max-w-sm">{message}</p>
+      <p className="mb-4 mt-1 max-w-sm text-sm leading-6 text-muted-foreground">{message}</p>
       {onRetry && (
         <button
           onClick={onRetry}
-          className="text-sm underline text-primary hover:no-underline"
+          className="text-sm font-medium text-primary underline-offset-4 hover:underline"
         >
           Try again
         </button>

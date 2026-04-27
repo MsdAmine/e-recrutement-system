@@ -100,7 +100,7 @@ export function JobOfferApplicationsPage() {
   });
 
   return (
-    <div className="max-w-4xl mx-auto animate-in">
+    <div className="mx-auto max-w-5xl space-y-6 animate-in">
       <Button variant="ghost" size="sm" className="mb-5 -ml-2" asChild>
         <Link to="/recruiter/job-offers">
           <ArrowLeftIcon className="h-4 w-4" />
@@ -120,7 +120,7 @@ export function JobOfferApplicationsPage() {
       {isLoading && (
         <div className="space-y-3">
           {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-24 rounded-xl" />
+            <Skeleton key={i} className="h-24 rounded-lg" />
           ))}
         </div>
       )}
@@ -149,9 +149,9 @@ export function JobOfferApplicationsPage() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.04 }}
-                  className="rounded-xl border border-border bg-card p-5 space-y-4"
+                  className="space-y-4 rounded-lg border border-border/80 bg-card/95 p-5 shadow-[0_1px_2px_hsl(222_38%_9%/0.04),0_8px_22px_hsl(222_38%_9%/0.035)] transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-[0_2px_4px_hsl(222_38%_9%/0.055),0_14px_34px_hsl(222_38%_9%/0.075)]"
                 >
-                  <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-start justify-between gap-4">
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                         <MailIcon className="h-4 w-4 text-muted-foreground" />
@@ -166,15 +166,15 @@ export function JobOfferApplicationsPage() {
                   </div>
 
                   {/* Cover letter preview */}
-                  <div className="bg-muted/40 rounded-lg p-3">
-                    <p className="text-xs text-muted-foreground mb-1 font-medium">Cover Letter</p>
-                    <p className="text-sm leading-relaxed line-clamp-3 text-foreground/80">
+                  <div className="rounded-lg border border-border/70 bg-muted/35 p-3 shadow-inner shadow-slate-950/[0.02]">
+                    <p className="mb-1 text-xs font-medium text-muted-foreground">Cover Letter</p>
+                    <p className="line-clamp-3 text-sm leading-6 text-foreground/80">
                       {app.coverLetter}
                     </p>
                   </div>
 
                   {/* Status update */}
-                  <div className="flex items-center gap-2 pt-1 border-t border-border/50">
+                  <div className="flex flex-wrap items-center gap-2 border-t border-border/60 pt-3">
                     <span className="text-xs text-muted-foreground">Update status:</span>
                     <Select
                       value={app.status}

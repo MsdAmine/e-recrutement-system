@@ -70,7 +70,7 @@ const JobSupervision: React.FC = () => {
           <input
             type="text"
             placeholder="Search jobs..."
-            className="pl-10 pr-4 py-2 bg-card border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 w-full md:w-64"
+            className="pl-10 pr-4 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 w-full md:w-64"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -104,7 +104,7 @@ const JobSupervision: React.FC = () => {
               <div className="flex md:flex-col justify-end gap-3">
                 <button
                   onClick={() => openDetailsModal(job)}
-                  className="flex items-center justify-center p-3 rounded-2xl bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                  className="flex items-center justify-center p-3 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
                   title="View Details"
                 >
                   <Eye className="w-5 h-5" />
@@ -115,7 +115,7 @@ const JobSupervision: React.FC = () => {
           ))}
         </div>
       ) : (
-        <div className="bg-muted/30 p-12 rounded-2xl text-center border-2 border-dashed border-border">
+        <div className="bg-muted/30 p-12 rounded-lg text-center border-2 border-dashed border-border">
           <AlertCircle className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-foreground">No job offers found</h3>
           <p className="text-muted-foreground">Try adjusting your search filters.</p>
@@ -124,7 +124,7 @@ const JobSupervision: React.FC = () => {
 
       {isDetailsModalOpen && selectedJob && createPortal(
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 overflow-y-auto">
-          <div className="bg-card w-full max-w-2xl rounded-2xl shadow-xl overflow-hidden animate-in zoom-in-95 my-8">
+          <div className="bg-card w-full max-w-2xl rounded-lg shadow-[0_20px_60px_hsl(222_38%_9%/0.18)] overflow-hidden animate-in zoom-in-95 my-8">
             <div className="flex justify-between items-center p-6 border-b border-border">
               <h3 className="text-xl font-bold text-foreground">Job Offer Details</h3>
               <button onClick={() => setIsDetailsModalOpen(false)} className="text-muted-foreground hover:text-foreground">
@@ -146,19 +146,19 @@ const JobSupervision: React.FC = () => {
               </div>
               
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-muted/30 p-3 rounded-xl border border-border">
+                <div className="bg-muted/30 p-3 rounded-lg border border-border">
                   <p className="text-xs text-muted-foreground mb-1 flex items-center"><MapPin className="w-3 h-3 mr-1"/> Location</p>
                   <p className="font-semibold text-sm">{selectedJob.location}</p>
                 </div>
-                <div className="bg-muted/30 p-3 rounded-xl border border-border">
+                <div className="bg-muted/30 p-3 rounded-lg border border-border">
                   <p className="text-xs text-muted-foreground mb-1 flex items-center"><Briefcase className="w-3 h-3 mr-1"/> Contract</p>
                   <p className="font-semibold text-sm">{selectedJob.contractType}</p>
                 </div>
-                <div className="bg-muted/30 p-3 rounded-xl border border-border">
+                <div className="bg-muted/30 p-3 rounded-lg border border-border">
                   <p className="text-xs text-muted-foreground mb-1 flex items-center"><DollarSign className="w-3 h-3 mr-1"/> Salary</p>
                   <p className="font-semibold text-sm">{selectedJob.salary ? `$${selectedJob.salary}` : "Not specified"}</p>
                 </div>
-                <div className="bg-muted/30 p-3 rounded-xl border border-border">
+                <div className="bg-muted/30 p-3 rounded-lg border border-border">
                   <p className="text-xs text-muted-foreground mb-1 flex items-center"><Calendar className="w-3 h-3 mr-1"/> Posted</p>
                   <p className="font-semibold text-sm">{new Date(selectedJob.createdAt).toLocaleDateString()}</p>
                 </div>
@@ -174,13 +174,13 @@ const JobSupervision: React.FC = () => {
             <div className="p-6 border-t border-border bg-muted/20 flex justify-between items-center">
               <button
                 onClick={openDeleteModal}
-                className="flex items-center px-4 py-2 bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground rounded-xl transition-colors font-medium"
+                className="flex items-center px-4 py-2 bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground rounded-lg transition-colors font-medium"
               >
                 <Trash2 className="w-4 h-4 mr-2" /> Delete Job
               </button>
               <button
                 onClick={() => setIsDetailsModalOpen(false)}
-                className="px-6 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl transition-colors font-medium"
+                className="px-6 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg transition-colors font-medium"
               >
                 Close
               </button>
@@ -192,7 +192,7 @@ const JobSupervision: React.FC = () => {
 
       {isDeleteModalOpen && selectedJob && createPortal(
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-card w-full max-w-md rounded-2xl shadow-xl overflow-hidden animate-in zoom-in-95">
+          <div className="bg-card w-full max-w-md rounded-lg shadow-[0_20px_60px_hsl(222_38%_9%/0.18)] overflow-hidden animate-in zoom-in-95">
             <div className="flex justify-between items-center p-6 border-b border-border">
               <h3 className="text-xl font-bold text-destructive flex items-center gap-2">
                 <ShieldAlert className="w-5 h-5" /> Confirm Deletion
@@ -212,13 +212,13 @@ const JobSupervision: React.FC = () => {
             <div className="p-6 border-t border-border bg-muted/20 flex justify-end gap-3">
               <button
                 onClick={() => setIsDeleteModalOpen(false)}
-                className="px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-xl transition-colors font-medium"
+                className="px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-lg transition-colors font-medium"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteJob}
-                className="px-4 py-2 bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl transition-colors font-medium"
+                className="px-4 py-2 bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-lg transition-colors font-medium"
               >
                 Delete Permanently
               </button>

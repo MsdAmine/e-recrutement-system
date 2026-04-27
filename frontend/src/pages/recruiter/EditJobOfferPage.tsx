@@ -104,16 +104,16 @@ export function EditJobOfferPage() {
 
   if (isLoading) {
     return (
-      <div className="max-w-2xl mx-auto space-y-4 animate-in">
+      <div className="mx-auto max-w-4xl space-y-4 animate-in">
         <Skeleton className="h-8 w-48" />
-        <Skeleton className="h-80 rounded-xl" />
+        <Skeleton className="h-80 rounded-lg" />
       </div>
     );
   }
 
   if (!isValidOfferId) {
     return (
-      <div className="max-w-2xl mx-auto text-center py-12 animate-in">
+      <div className="mx-auto max-w-4xl py-12 text-center animate-in">
         <p className="text-muted-foreground">Invalid job offer ID.</p>
         <Button variant="outline" className="mt-4" asChild>
           <Link to="/recruiter/job-offers">Back to Job Offers</Link>
@@ -131,7 +131,7 @@ export function EditJobOfferPage() {
         : "Failed to load this job offer.";
 
     return (
-      <div className="max-w-2xl mx-auto animate-in">
+      <div className="mx-auto max-w-4xl animate-in">
         <ErrorDisplay
           title="Unable to load job offer"
           message={loadErrorMessage}
@@ -147,7 +147,7 @@ export function EditJobOfferPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto animate-in">
+    <div className="mx-auto max-w-4xl space-y-6 animate-in">
       <Button variant="ghost" size="sm" className="mb-5 -ml-2" asChild>
         <Link to="/recruiter/job-offers">
           <ArrowLeftIcon className="h-4 w-4" />
@@ -157,13 +157,13 @@ export function EditJobOfferPage() {
 
       <PageHeader title="Edit Job Offer" description="Update your job offer details" />
 
-      <div className="rounded-xl border border-border bg-card p-6">
+      <div className="surface-card p-6">
         <form onSubmit={handleSubmit((v) => mutation.mutate(v))} className="space-y-5">
           <FormField label="Job Title" error={errors.title?.message} required>
             <Input id="edit-job-title" {...register("title")} />
           </FormField>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormField label="Contract Type" error={errors.contractType?.message} required>
               <Controller
                 name="contractType"
@@ -194,7 +194,7 @@ export function EditJobOfferPage() {
             <Input id="edit-job-salary" type="number" {...register("salary")} />
           </FormField>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormField label="Required Skills (comma-separated)" error={errors.requiredSkills?.message}>
               <Input id="edit-job-required-skills" placeholder="Java, Spring Boot, PostgreSQL" {...register("requiredSkills")} />
             </FormField>
@@ -207,7 +207,7 @@ export function EditJobOfferPage() {
             <Textarea id="edit-job-description" className="min-h-[160px]" {...register("description")} />
           </FormField>
 
-          <div className="flex items-center gap-3 p-4 rounded-lg bg-muted/50 border border-border">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-muted/45 p-4">
             <Controller
               name="active"
               control={control}
@@ -227,7 +227,7 @@ export function EditJobOfferPage() {
           </div>
 
           {mutation.isError && (
-            <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2.5 text-sm text-destructive">
+            <div className="rounded-md border border-destructive/20 bg-destructive/10 px-3 py-2.5 text-sm text-destructive">
               Failed to update job offer.
             </div>
           )}
